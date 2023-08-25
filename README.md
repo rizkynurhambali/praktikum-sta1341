@@ -7,7 +7,7 @@ STA1341 Metode Peramalan Deret Waktu
 
 ### Dosen
 1. Akbar Rizki, S. Stat., M. Si.
-2. Dr. Yenni Angraiani, S. Stat., M. Si.
+2. Dr. Yenni Angraiani, S. Si., M. Si.
 
 ### Asisten
 1. Adelia Putri Pangestika
