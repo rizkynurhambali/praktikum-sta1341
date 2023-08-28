@@ -9,7 +9,7 @@ output: html_document
 
 Download Git pada link berikut [Download Git](https://git-scm.com/downloads) lalu install git.
 
-### Membuat akun github
+### Membuat Akun GitHub
 
 Buka github pada link berikut [Github](https://github.com/). Klik sign up yang terdapat pada pojok kanan atas.
 
@@ -61,7 +61,7 @@ Pilih menu git/SVN, masukkan file git.exe pada git executable lalu klik apply da
 
 ![](images/git%20r.png){width="491"}
 
-### Koneksi akun GitHub pada RStudio
+### Koneksi Akun GitHub pada RStudio
 
 Pada tab terminal, ketik perintah berikut untuk konfigurasi nama
 
@@ -73,7 +73,7 @@ Selanjutnya, ketik perintah berikut untuk konfigurasi alamat email
 
 Pada saat clone repositori, pengguna akan diminta untuk memasukkan password sebagai verifikasi akun yang terhubung agar kemudian dapat melakukan proses manajemen kode yang ada di lokal pengguna dan server GitHub.
 
-### Membuat repository
+### Membuat Repository
 
 Pilih menu create new pada bagian kanan atas halaman GitHub lalu klik new repository.
 
@@ -85,8 +85,28 @@ Masukkan nama repository dan deskripsinya. Selanjutnya pilih apakah respository 
 
 ![](images/create%20repo.png)
 
-### Clone repository
+### Clone Repository
 
-Proses duplikasi repositori ke lokal tempat dimana kita bekerja yaitu dengan membuat proyek baru pada RStudio dengan cloning alamat repositori yang sudah dibuat sebelumnya
+Proses duplikasi repositori ke lokal tempat dimana kita bekerja yaitu dengan membuat proyek baru pada RStudio dengan cloning alamat repositori yang sudah dibuat sebelumnya. Untuk melakukannya, buka RStudio dan pilih menu file yang ada di pojok kiri atas lalu pilih new project
 
-![](images/new%20project.png){width="280"}
+![](images/new%20project-01.png){width="233"}
+
+Untuk menyambungkan dengan GitHub, pilih version control.
+
+![](images/version%20control-01.png){width="368"}
+
+Selanjutnya pilih Git. Untuk melakukan clone repository, dibutuhkan repository url yang sebelumnya telah dibuat di GitHub.
+
+![](images/pilih%20git.png){width="363"}
+
+Buka GitHub dan pilih Code yang berada di bagian sebelah kanan atas, lalu salin link seperti yang tertera pada gambar.
+
+![](images/copas%20link%20github.png){width="301"}
+
+Masukkan link yang telah disalin ke bagian repository url, pilih folder tempat penyimpanan project baru dan klik create project
+
+![](images/clone%20git.png){width="383"}
+
+### Membuat Folder Baru dan Mengupload File ke Github
+
+
