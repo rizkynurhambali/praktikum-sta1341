@@ -84,4 +84,70 @@ Menyimpan plot
 
 ## SMA & DMA
 
-## SES & DES
+## Single Exponential Smoothing & Double Exponential Smoothing
+
+### Pembagian Data
+
+```{r}
+#membagi training dan testing
+training<-data1[1:40,]
+testing<-data1[41:50,]
+train.ts <- ts(training$Yt)
+test.ts <- ts(testing$Yt)
+```
+
+### Eksplorasi
+
+```{r}
+#eksplorasi data
+plot(data1.ts, col="red",main="Plot semua data")
+points(data1.ts)
+
+plot(train.ts, col="blue",main="Plot data latih")
+points(train.ts)
+```
+
+```{r}
+#Eksplorasi dengan GGPLOT
+library(ggplot2)
+ggplot() + 
+  geom_line(data = training, aes(x = Periode, y = Yt, col = "Data Latih")) +
+  geom_line(data = testing, aes(x = Periode, y = Yt, col = "Data Uji")) +
+  labs(x = "Periode Waktu", y = "Membaca", color = "Legend") +
+  scale_colour_manual(name="Keterangan:", breaks = c("Data Latih", "Data Uji"),
+                      values = c("blue", "red")) + 
+  theme_bw() + theme(legend.position = "bottom",
+                     plot.caption = element_text(hjust=0.5, size=12))
+```
+
+### SES
+
+```{r}
+#Cara 1 (fungsi ses)
+ses.1 <- ses(train.ts, h = 10, alpha = 0.2)
+plot(ses.1)
+ses.1
+
+ses.2<- ses(train.ts, h = 10, alpha = 0.7)
+plot(ses.2)
+ses.2
+```
+
+```{r}
+#Cara 2 (fungsi Holtwinter)
+ses1<- HoltWinters(train.ts, gamma = FALSE, beta = FALSE, alpha = 0.2)
+plot(ses1)
+
+#ramalan
+ramalan1<- forecast(ses1, h=10)
+ramalan1
+
+ses2<- HoltWinters(train.ts, gamma = FALSE, beta = FALSE, alpha = 0.7)
+plot(ses2)
+
+#ramalan
+ramalan2<- forecast(ses2, h=10)
+ramalan2
+```
+
+### DES
