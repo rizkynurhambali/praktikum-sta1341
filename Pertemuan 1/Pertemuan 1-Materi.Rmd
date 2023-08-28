@@ -679,7 +679,7 @@ Metode Holt-Winter untuk peramalan data musiman menggunakan tiga persamaan pemul
 
 ![](images/example additive-multiplicative.png)
 
-Pemulusan data musiman dengan metode Winter dilakukan menggunakan fungsi `HoltWinters()` dengan memasukkan argumen tambahan, yaitu `gamma()` dan `seasonal()` . Arguman `seasonal()` diinisialisasi menyesuaikan jenis apakah aditif atau multiplikatif.
+Pemulusan data musiman dengan metode Winter dilakukan menggunakan fungsi `HoltWinters()` dengan memasukkan argumen tambahan, yaitu `gamma()` dan `seasonal()` . Arguman `seasonal()` diinisialisasi menyesuaikan jenis musiman, aditif atau multiplikatif.
 
 ### Winter Aditif
 
