@@ -107,7 +107,7 @@ Masukkan link yang telah disalin ke bagian repository url, pilih folder tempat p
 
 ![](images/clone%20git.png){width="383"}
 
-### Membuat Folder Baru dan Mengupload File ke GitHub
+### Membuat Folder Baru pada Repository GitHub dan Memperbaharuinya di R
 
 Untuk membuat folder baru pada repository GitHub, Buka GitHub, pilih Add file yang terdapat pada bagian kanan atas lalu klik create new file
 
@@ -121,4 +121,50 @@ Untuk memperbaharui RStudio agar file yang baru dibuat dapat dimunculkan, pilih 
 
 ![](images/pull%20with%20rebase.png){width="395"}
 
-Folder serta file yang sebelumnya telah dibuat di repository github, akan muncul pada bagian file RStudio.
+Folder serta file yang sebelumnya telah dibuat di repository github, akan muncul pada bagian file RStudio. Untuk melihat file yang dibuat dalam folder tersebut, klik folder yang ingin dibuka
+
+![](images/folder%20kebentuk.png){width="393"}
+
+Untuk membuka file dalam folder tersebut, klik file yang ingin dibuka pada folder yang dimaksud
+
+![](images/latihan%202%20di%20folder.png){width="403"}
+
+### Sekilas Tentang R Markdown
+
+R Markdown memiliki ekstensi Rmd. Untuk membuat judul dalam Rmd, gunakan tanda pagar (\#) seperti yang tertera pada baris pertama gambar di bawah. Semakin banyak jumlah pagar (\#) maka akan semakin kecil tulisan judul yang dibuat, begitupun sebaliknya. Untuk menulis sebuah kalimat/penjelasan, dapat ditulis seperti biasa seperti yang tertera pada baris ke 3. Untuk menulis syntax R, gunakan petik (\`) sebanyak 3 kali diikuti dengan {r} seperti yang tertera pada baris ke 5 gambar dibawah. Untuk mengakhiri penulisan syntax, kembali gunakan petik sebanyak 3 kali, seperti yang tertera pada baris ke 8 gambar di bawah. Untuk menjalankan syntax R yang telah dibuat, klik panah berwarna hijau yang terletak pada sisi sebelah kanan syntax baris pertama. Output dari syntax akan keluar tepat dibawah tempat syntax dituliskan.
+
+![](images/belajar%20rmd.png){width="487"}
+
+Untuk menambahkan gambar pada file Rmd, klik Visual lalu klik ikon gambar pada sisi atas
+
+![](images/visual%20tambah%20gambar.png){width="491"}
+
+Masukkan direktori tempat gambar yang akan dimasukkan berada lalu klik OK
+
+![](images/tambah%20gambar%20rmd.png){width="295"}
+
+Untuk menyimpan Rmd dalam bentuk HTML, PDF ataupun Word, klik knit pada bagian atas, lalu pilih bentuk file yang diinginkan.
+
+![](images/knit.png){width="137"}
+
+### Memperbaharui file dalam GitHub
+
+Untuk memperbaharui file dalam GitHub yang sebelumnya telah diedit di RStudio, lakukan `Ctrl+S` lalu pilih menu Git pada bagian kanan, ceklis file yang baru diperbaharui, lalu klik Commit
+
+![](images/commit%20buat%20update.png){width="399"}
+
+Ceklis file yang baru diperbaharui, masukkan pesan pembaharuan pada bagian commite message, lalu klik commit
+
+![](images/commit%20review.png){width="528"}
+
+Setelah file yang baru diperbaharui hilang, klik push untuk mengunggah file ke GitHub.
+
+![](images/pushh.png){width="528"}
+
+Selanjutnya akan muncul jendela baru, dan ketika push selesai dijalankan, klik close
+
+![](images/kelarr.png){width="478"}
+
+File yang diperbaharui di RStudio selanjutnya akan muncul di GitHub setelah GitHub di refresh
+
+![](images/really%20kelar.png){width="448"}
