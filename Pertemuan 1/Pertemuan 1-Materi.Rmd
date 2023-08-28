@@ -1,0 +1,20 @@
+---
+title: "Pertemuan 1 - Pemulusan"
+author:
+- Adelia Putri Pangestika
+- Muhammad Rizky Nurhambali
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ekplorasi
+
+## SMA & DMA
+
+## SES & DES
