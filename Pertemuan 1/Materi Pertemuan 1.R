@@ -1,1 +1,0 @@
-x = "Adelia Putri Pangestika"
