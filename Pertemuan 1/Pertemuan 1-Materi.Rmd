@@ -677,6 +677,8 @@ Pemulusan data musiman dengan metode Winter dilakukan menggunakan fungsi `HoltWi
 
 Metode Holt-Winter untuk data musiman menggunakan persamaan peramalan (Ft) dari tiga persamaan pemulusan yang terdiri atas persamaan untuk level $(L_t)$, trend $(B_t)$, dan komponen seasonal / musiman $(S_t)$ dengan parameter pemulusan berupa $\alpha$, $\beta$, dan $\gamma$.
 
+![](images/Perbandingan model aditif.png)
+
 ### Winter Aditif
 
 Perhitungan dengan model aditif dilakukan jika plot data asli menunjukkan fluktuasi musiman yang relatif stabil (konstan).
