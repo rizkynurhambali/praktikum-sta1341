@@ -1,9 +1,19 @@
 ---
-title: "Pertemuan 1 Pemulusan"
+title: "Panduan Git"
 author: "Adelia Putri Pangestika-Muhammad Rizky Nurhambali"
 date: "2023-08-28"
 output: html_document
 ---
+
+### Mendownload Git
+
+Download Git pada link berikut [Download Git](https://git-scm.com/downloads) lalu install git.
+
+### Membuat akun github
+
+Buka github pada link berikut [Github](https://github.com/). Klik sign up yang terdapat pada pojok kanan atas.
+
+![](images/sign up true.png)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
