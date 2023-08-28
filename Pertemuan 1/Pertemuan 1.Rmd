@@ -1,1 +1,10 @@
+---
+title: "Pertemuan 1 Pemulusan"
+author: "Adelia Putri Pangestika-Muhammad Rizky Nurhambali"
+date: "2023-08-28"
+output: html_document
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
