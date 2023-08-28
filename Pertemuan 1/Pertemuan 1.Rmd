@@ -107,6 +107,18 @@ Masukkan link yang telah disalin ke bagian repository url, pilih folder tempat p
 
 ![](images/clone%20git.png){width="383"}
 
-### Membuat Folder Baru dan Mengupload File ke Github
+### Membuat Folder Baru dan Mengupload File ke GitHub
 
+Untuk membuat folder baru pada repository GitHub, Buka GitHub, pilih Add file yang terdapat pada bagian kanan atas lalu klik create new file
 
+![](images/add%20file.png){width="306"}
+
+Tulis nama folder yang akan dibuat di repository GitHub, bubuhkan tanda miring (/) lalu buat file baru, dalam hal ini akan dibuat file dalam bentuk R markdown sehingga file baru yang dibuat memiliki ekstensi Rmd
+
+![](images/bikin folder git.png){width="413"}
+
+Untuk memperbaharui RStudio agar file yang baru dibuat dapat dimunculkan, pilih menu Git pada bagian kanan atas, lalu pilih menu Pull dan klik Pull with Rebase.
+
+![](images/pull with rebase.png){width="395"}
+
+Folder serta file yang sebelumnya telah dibuat di repository github, akan muncul pada bagian file RStudio
