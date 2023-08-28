@@ -13,12 +13,75 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Ekplorasi
+## Library / Packages
 
-aaaaaaaa
+*Package* R yang akan digunakan pada perkuliahan Analisis Deret Waktu sesi UTS adalah: `forecast`, `graphics`, `TTR`, `TSA` . Jika *package* tersebut belum ada, silakan install terlebih dahulu.
+
+```{r}
+#install.packages("forecast")
+#install.packages("graphics")
+#install.packages("TTR")
+#install.packages("TSA")
+```
+
+Jika sudah ada, silakan panggil library *package* tersebut.
+
+```{r}
+library("forecast")
+library("graphics")
+library("TTR")
+library("TSA")
+```
+
+## Impor Data
+
+```{r}
+#install.packages("rio") #install jika belum ada
+library(rio)
+data1 <- import("https://raw.githubusercontent.com/rizkynurhambali/Praktikum-MPDW-2324/main/Pertemuan%201/Data_1.csv")
+data2 <- import("https://raw.githubusercontent.com/rizkynurhambali/Praktikum-MPDW-2324/main/Pertemuan%201/Data_2.csv")
+```
+
+## Eksplorasi Data
+
+Melihat data, struktur data, dan dimensi data
+
+```{r}
+View(data1)
+str(data1)
+dim(data1)
+```
+
+Mengubah data agar terbaca sebagai data deret waktu dengan fungsi `ts()` .
+
+```{r}
+data1.ts <- ts(data1$Yt)
+data2.ts <- ts(data2$Sales)
+```
+
+Menampilkan ringkasan data
+
+```{r}
+summary(data1.ts)
+summary(data2.ts)
+```
+
+Membuat plot data deret waktu
+
+```{r}
+ts.plot(data1.ts, xlab="Time Period ", ylab="Reading", 
+        main = "Time Series Plot")
+points(data1.ts)
+```
+
+Menyimpan plot
+
+```{r}
+#menyimpan plot
+#dev.copy(png, "eksplorasi.png")
+#dev.off()
+```
 
 ## SMA & DMA
 
 ## SES & DES
-
-aaa
