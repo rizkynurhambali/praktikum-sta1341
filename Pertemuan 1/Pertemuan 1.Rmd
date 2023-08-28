@@ -89,4 +89,4 @@ Masukkan nama repository dan deskripsinya. Selanjutnya pilih apakah respository 
 
 Proses duplikasi repositori ke lokal tempat dimana kita bekerja yaitu dengan membuat proyek baru pada RStudio dengan cloning alamat repositori yang sudah dibuat sebelumnya
 
-![](images/new%20project.png){width="280"}
+![Pilih version kontrol](images/new%20project.png){width="280"}
