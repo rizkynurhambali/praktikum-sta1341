@@ -122,6 +122,8 @@ ggplot() +
 
 ### SES
 
+Single Exponential Smoothing merupakan metode pemulusan yang tepat digunakan untuk data stasioner.
+
 Pemulusan dengan metode SES dapat dilakukan dengan dua fungsi dari *packages* berbeda, yaitu (1) fungsi `ses()` dari *packages* `forecast` dan (2) fungsi `HoltWinters` dari *packages* `stats` .
 
 ```{r}
@@ -141,7 +143,7 @@ autoplot(ses.1) +
   ylab("Membaca") + xlab("Periode")
 ```
 
-Pada fungsi `ses()` , nilai `y` adalah nilai data deret waktu, `gamma` adalah parameter pemulusan untuk komponen musiman, `beta` adalah parameter pemulusan untuk tren, dan `alpha` adalah parameter pemulusan untuk stasioner.
+Pada fungsi `ses()` , nilai `y` adalah nilai data deret waktu, `gamma` adalah parameter pemulusan untuk komponen musiman, `beta` adalah parameter pemulusan untuk tren, dan `alpha` adalah parameter pemulusan untuk stasioner, serta `h` adalah banyaknya periode yang akan diramalkan.
 
 ```{r}
 #Cara 2 (fungsi Holtwinter)
@@ -190,7 +192,7 @@ MSE1<-ses1$SSE/length(train.ts)
 RMSE1<-sqrt(MSE1)
 
 akurasi1 <- matrix(c(SSE1,MSE1,RMSE1))
-row.names(akurasi1)<- c("SSE", "MSE", "MAPE")
+row.names(akurasi1)<- c("SSE", "MSE", "RMSE")
 colnames(akurasi1) <- c("Akurasi lamda=0.2")
 akurasi1
 
@@ -276,4 +278,11 @@ row.names(akurasitesting2)<- c("MSE1", "MSE2", "MSEopt")
 akurasitesting2
 ```
 
+```{r}
+#cara lain
+accuracy(ramalanopt,testing$Yt)
+```
+
 ### DES
+
+Metode pemulusan Double Exponential Smoothing (DES) digunakan untuk data yang memiliki pola tren. Pemulusan menggunakan metode ini akan menghasilkan peramalan tidak konstan untuk periode berikutnya.
