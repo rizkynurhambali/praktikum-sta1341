@@ -13,8 +13,80 @@ Download Git pada link berikut [Download Git](https://git-scm.com/downloads) lal
 
 Buka github pada link berikut [Github](https://github.com/). Klik sign up yang terdapat pada pojok kanan atas.
 
-![](images/sign up true.png)
+![](images/sign%20up%20true.png){width="474"}
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Klik sign in pada pojok kanan atas halaman jika sudah memiliki akun github sebelumnya. Jika belum memiliki akun github, masukkan email dan klik continue.
+
+![](images/masukkan%20email.png){width="472"}
+
+Masukkan password lalu klik continue.
+
+![](images/masukin%20password.png){width="475"}
+
+Masukkan username lalu klik continue.
+
+![](images/masukkan%20username.png){width="472"}
+
+Selanjutnya, jika ingin mendapatkan informasi mengenai update dan pengumuman lainnya, maka ketik "y" lalu klik continue, sebaliknya jika tidak maka ketik "n" lalu klik continue.
+
+![](images/yay%20or%20nay.png){width="474"}
+
+Lakukan verifikasi dengan memilih verify lalu lakukan sesuai dengan petunjuk yang diberikan.
+
+![](images/verify.png){width="479"}
+
+Jika verifikasi sudah berhasil dilakukan, klik create account.
+
+![](images/create%20account.png){width="487" height="74"}
+
+Buka email, lalu masukkan kode otp yang dikirimkan melalui email
+
+![](images/verif%20email.png){width="491"}
+
+Jawab beberapa pertanyaan yang di ajukan lalu klik continue
+
+![](images/jawab%20pertanyaan.png){width="391"}
+
+Klik continue for free yang terletak pada bagian kiri bawah halaman
+
+![](images/continue%20for%20free.png){width="507"}
+
+### Integrasi Git, GitHub dan RStudio
+
+Buka RStudio, lalu pilih menu tools dan klik global option.
+
+![](images/global%20option.png){width="269"}
+
+Pilih menu git/SVN, masukkan file git.exe pada git executable lalu klik apply dan klik ok
+
+![](images/git%20r.png){width="491"}
+
+### Koneksi akun GitHub pada RStudio
+
+Pada tab terminal, ketik perintah berikut untuk konfigurasi nama
+
+![](images/terminal.png){width="504"}
+
+Selanjutnya, ketik perintah berikut untuk konfigurasi alamat email
+
+![](images/r%20email.png){width="552" height="35"}
+
+Pada saat clone repositori, pengguna akan diminta untuk memasukkan password sebagai verifikasi akun yang terhubung agar kemudian dapat melakukan proses manajemen kode yang ada di lokal pengguna dan server GitHub.
+
+### Membuat repository
+
+Pilih menu create new pada bagian kanan atas halaman GitHub lalu klik new repository.
+
+![](images/new%20repo.png){width="458"}
+
+Masukkan nama repository dan deskripsinya. Selanjutnya pilih apakah respository akan dibuat publik (semua orang dapat melihat) atau privat (dapat memilih siapa saja yang dapat melihat). Ceklis Add a README file lalu klik continue.
+
+![](images/repo%20part%201.png)
+
+![](images/create%20repo.png)
+
+### Clone repository
+
+Proses duplikasi repositori ke lokal tempat dimana kita bekerja yaitu dengan membuat proyek baru pada RStudio dengan cloning alamat repositori yang sudah dibuat sebelumnya.
+
+![](images/new project.png){width="280"}
