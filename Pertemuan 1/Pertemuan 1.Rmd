@@ -115,10 +115,10 @@ Untuk membuat folder baru pada repository GitHub, Buka GitHub, pilih Add file ya
 
 Tulis nama folder yang akan dibuat di repository GitHub, bubuhkan tanda miring (/) lalu buat file baru, dalam hal ini akan dibuat file dalam bentuk R markdown sehingga file baru yang dibuat memiliki ekstensi Rmd
 
-![](images/bikin folder git.png){width="413"}
+![](images/bikin%20folder%20git.png){width="413"}
 
 Untuk memperbaharui RStudio agar file yang baru dibuat dapat dimunculkan, pilih menu Git pada bagian kanan atas, lalu pilih menu Pull dan klik Pull with Rebase.
 
-![](images/pull with rebase.png){width="395"}
+![](images/pull%20with%20rebase.png){width="395"}
 
-Folder serta file yang sebelumnya telah dibuat di repository github, akan muncul pada bagian file RStudio
+Folder serta file yang sebelumnya telah dibuat di repository github, akan muncul pada bagian file RStudio.
