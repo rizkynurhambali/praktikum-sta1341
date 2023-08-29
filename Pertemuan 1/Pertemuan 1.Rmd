@@ -2,7 +2,10 @@
 title: "Panduan Git"
 author: "Adelia Putri Pangestika-Muhammad Rizky Nurhambali"
 date: "2023-08-28"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
 ---
 
 ### Mendownload Git
