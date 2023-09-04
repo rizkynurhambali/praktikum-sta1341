@@ -4,7 +4,49 @@ author:
 - Adelia Putri Pangestika
 - Muhammad Rizky Nurhambali
 output:
-  html_document: default
   pdf_document: default
   word_document: default
+  html_document:
+    theme: yeti
+    toc: true
+    toc_float: true
 ---
+
+## Pemanggilan *Packages*
+
+```{r}
+library(dplyr)
+library(TTR)
+library(forecast)
+library(lmtest) #digunakan untuk uji formal pendeteksian autokorelasi
+library(orcutt) #untuk membuat model regresi Cochrane-Orcutt
+library(HoRM) #untuk membuat model regresi Hildreth-Lu
+```
+
+## Input Data
+
+Data yang digunakan dalam kesempatan kali ini adalah data IPM Provinsi Gorontalo periode tahun 2010-2021.
+
+```{r}
+tahun <- c(2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021)
+ipm <- c(62.65,63.48,64.16,64.70,65.17,65.86,66.29,67.01,67.71,68.49,68.68,69.00)
+dtGorontalo <- cbind(tahun,ipm)
+dtGorontalo <- as.data.frame(dtGorontalo)
+dtGorontalo
+```
+
+## Eksplorasi Data
+
+Sebelum melakukan regresi, akan diperlihatkan *plot time-series* dari IPM Provinsi Gorontalo Periode 2010-2021
+
+```{r}
+#Membentuk objek time series
+data.ts<-ts(dtGorontalo$ipm)
+data.ts
+
+#Membuat plot time series
+ts.plot(data.ts, xlab="Time Period ", ylab="IPM", main= "Time Series Plot of IPM")
+points(data.ts)
+```
+
+Selanjutnya akan dilakukan ramalan dan pemulusan dengan metode DMA dan DES karena terlihat pada plot di atas menunjukkan adanya *trend*.
