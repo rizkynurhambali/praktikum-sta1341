@@ -50,3 +50,40 @@ points(data.ts)
 ```
 
 Selanjutnya akan dilakukan ramalan dan pemulusan dengan metode DMA dan DES karena terlihat pada plot di atas menunjukkan adanya *trend*.
+
+```{r}
+dt.sma <- SMA(data.ts, n=6)
+dma <- SMA(dt.sma, n = 6)
+At <- 2*dt.sma - dma
+Bt <- 2/(4-1)*(dt.sma - dma)
+dt.dma<- At+Bt
+dt.ramal<- c(NA, dt.sma)
+
+t = 1:5
+f = c()
+
+for (i in t) {
+  f[i] = At[length(At)] + Bt[length(Bt)]*(i)
+}
+```
+
+```{r}
+dt.gab <- cbind(aktual = c(data.ts,rep(NA,5)), 
+                pemulusan1 = c(dt.sma,rep(NA,5)),
+                pemulusan2 = c(dt.dma, rep(NA,5)),
+                At = c(At, rep(NA,5)), 
+                Bt = c(Bt,rep(NA,5)),
+                ramalan = c(dt.ramal, f[-1]))
+dt.gab
+
+#Plot time series
+ts.plot(dt.gab[,1], xlab="Time Period ", ylab="IPM", 
+        main= "DMA N=6 Data IPM", ylim=c(62,75))
+points(dt.gab[,1])
+points(dt.gab[,3])
+points(dt.gab[,6])
+lines(dt.gab[,3],col="green",lwd=2)
+lines(dt.gab[,6],col="red",lwd=2)
+legend("topleft",c("data aktual","data pemulusan","data peramalan"), 
+       lty=8, col=c("black","green","red"), cex=0.8)
+```
