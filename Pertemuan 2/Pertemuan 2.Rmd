@@ -1,1 +1,10 @@
-
+---
+title: "Pertemuan 2 - Regresi"
+author:
+- Adelia Putri Pangestika
+- Muhammad Rizky Nurhambali
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
