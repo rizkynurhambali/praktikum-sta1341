@@ -3,9 +3,14 @@ title: "Panduan Git"
 author: "Adelia Putri Pangestika-Muhammad Rizky Nurhambali"
 date: "2023-08-28"
 output:
+<<<<<<< HEAD
+  pdf_document: default
+  html_document: default
+=======
   html_document: default
   pdf_document: default
   word_document: default
+>>>>>>> 80d7a6a9db9b63306898d7ad5a01ce57c3eecc48
 ---
 
 ### Mendownload Git
@@ -20,11 +25,11 @@ Buka GitHub pada link berikut [GitHub](https://github.com/). Klik sign up yang t
 
 Klik `Sign in` pada pojok kanan atas halaman jika sudah memiliki akun GitHub sebelumnya. Jika belum memiliki akun GitHub, masukkan email dan klik `Continue`.
 
-![](images/masukkan%20email.png){width="472"}
+![](images/masukkan%20email.png){width="631"}
 
 Masukkan password lalu klik `Continue`.
 
-![](images/masukin%20password.png){width="475"}
+![](images/masukin%20password.png){width="576"}
 
 Masukkan username lalu klik `Continue`.
 
@@ -68,11 +73,11 @@ Pilih menu `Git/SVN`, masukkan file git.exe pada git executable lalu klik `Apply
 
 Pada tab `Terminal`, ketik perintah berikut untuk konfigurasi nama
 
-![](images/terminal.png){width="504"}
+![](images/terminal.png){width="664"}
 
 Selanjutnya, ketik perintah berikut untuk konfigurasi alamat email
 
-![](images/r%20email.png){width="552" height="35"}
+![](images/r%20email.png){width="581" height="42"}
 
 Pada saat clone repositori, pengguna akan diminta untuk memasukkan password sebagai verifikasi akun yang terhubung agar kemudian dapat melakukan proses manajemen kode yang ada di lokal pengguna dan server GitHub.
 
@@ -80,7 +85,7 @@ Pada saat clone repositori, pengguna akan diminta untuk memasukkan password seba
 
 Pilih menu create new pada bagian kanan atas halaman GitHub lalu klik `New repository`.
 
-![](images/new%20repo.png){width="458"}
+![](images/new%20repo.png){width="538"}
 
 Masukkan nama repository dan deskripsinya. Selanjutnya pilih apakah respository akan dibuat publik (semua orang dapat melihat) atau privat (dapat memilih siapa saja yang dapat melihat). Ceklis Add a README file lalu klik `Continue`.
 
@@ -120,7 +125,7 @@ Untuk membuat folder baru pada repository GitHub, Buka GitHub, pilih `Add file` 
 
 Tulis nama folder yang akan dibuat di repository GitHub, bubuhkan tanda miring `/` lalu buat file baru, dalam hal ini akan dibuat file dalam bentuk R markdown sehingga file baru yang dibuat memiliki ekstensi Rmd
 
-![](images/bikin%20folder%20git.png){width="413"}
+![](images/bikin%20folder%20git.png){width="541"}
 
 Untuk memperbaharui RStudio agar file yang baru dibuat dapat dimunculkan, pilih menu `Git` pada bagian kanan atas, lalu pilih menu `Pull` dan klik `Pull with Rebase`.
 
@@ -135,6 +140,11 @@ Untuk membuka file dalam folder tersebut, klik file yang ingin dibuka pada folde
 ![](images/latihan%202%20di%20folder.png){width="403"}
 
 ### Sekilas Tentang R Markdown
+
+```{r}
+x=3+2
+x
+```
 
 R Markdown memiliki ekstensi Rmd. Untuk membuat judul dalam Rmd, gunakan tanda pagar `#` seperti yang tertera pada baris pertama gambar di bawah. Semakin banyak jumlah pagar `#` maka akan semakin kecil tulisan judul yang dibuat, begitupun sebaliknya. Untuk menulis sebuah kalimat/penjelasan, dapat ditulis seperti biasa seperti yang tertera pada baris ke 3. Untuk menulis syntax R, gunakan petik (\`) sebanyak 3 kali diikuti dengan {r} seperti yang tertera pada baris ke 5 gambar dibawah. Untuk mengakhiri penulisan syntax, kembali gunakan petik sebanyak 3 kali, seperti yang tertera pada baris ke 8 gambar di bawah. Untuk menjalankan syntax R yang telah dibuat, klik panah berwarna hijau yang terletak pada sisi sebelah kanan syntax baris pertama. Output dari syntax akan keluar tepat dibawah tempat syntax dituliskan.
 
