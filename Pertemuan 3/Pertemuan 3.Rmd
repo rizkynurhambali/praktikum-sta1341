@@ -1,0 +1,13 @@
+---
+title: "Pertemuan 3 - Regresi dengan Peubah Lag"
+author:
+- Adelia Putri Pangestika
+- Muhammad Rizky Nurhambali
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    theme: yeti
+    toc: true
+    toc_float: true
+---
