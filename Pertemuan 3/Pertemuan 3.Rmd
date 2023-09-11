@@ -11,3 +11,177 @@ output:
     toc: true
     toc_float: true
 ---
+
+## *Packages*
+
+```{r}
+#PACKAGES
+#install.packages("dLagM") #install jika belum ada
+#install.packages("dynlm") #install jika belum ada
+#install.packages("MLmetrics") #install jika belum ada
+library(dLagM)
+library(dynlm)
+library(MLmetrics)
+library(lmtest)
+library(car)
+```
+
+## Impor Data
+
+```{r}
+data <- rio::import("https://raw.githubusercontent.com/rizkynurhambali/Praktikum-MPDW-2324/main/Pertemuan%203/Data%20Asli.csv")
+str(data)
+data
+```
+
+## Pembagian Data
+
+```{r}
+#SPLIT DATA
+train<-data[1:15,]
+test<-data[16:20,]
+```
+
+```{r}
+#data time series
+train.ts<-ts(train)
+test.ts<-ts(test)
+data.ts<-ts(data)
+```
+
+## Model Koyck
+
+### Pemodelan
+
+```{r}
+#MODEL KOYCK
+model.koyck <- koyckDlm(x = train$Xt, y = train$Yt)
+summary(model.koyck)
+AIC(model.koyck)
+BIC(model.koyck)
+```
+
+### Peramalan dan Akurasi
+
+```{r}
+fore.koyck <- forecast(model = model.koyck, x=test$Xt, h=5)
+mape.koyck <- MAPE(fore.koyck$forecasts, test$Yt)
+#akurasi data training
+GoF(model.koyck)
+```
+
+## Regression with Distributed Lag
+
+### Pemodelan
+
+```{r}
+model.dlm <- dlm(x = train$Xt,y = train$Yt , q = 2)
+summary(model.dlm)
+AIC(model.dlm)
+BIC(model.dlm)
+```
+
+### Peramalan dan Akurasi
+
+```{r}
+fore.dlm <- forecast(model = model.dlm, x=test$Xt, h=5)
+mape.dlm <- MAPE(fore.dlm$forecasts, test$Yt)
+#akurasi data training
+GoF(model.dlm)
+```
+
+### *Lag* Optimum
+
+```{r}
+#penentuan lag optimum 
+finiteDLMauto(formula = Yt ~ Xt,
+              data = data.frame(train), q.min = 1, q.max = 4,
+              model.type = "dlm", error.type = "AIC", trace = FALSE)
+```
+
+```{r}
+#model dlm dengan lag optimum
+model.dlm2 <- dlm(x = train$Xt,y = train$Yt , q = 4)
+summary(model.dlm2)
+AIC(model.dlm2)
+BIC(model.dlm2)
+```
+
+```{r}
+#peramalan dan akurasi
+fore.dlm2 <- forecast(model = model.dlm2, x=test$Xt, h=5)
+mape.dlm2<- MAPE(fore.dlm2$forecasts, test$Yt)
+#akurasi data training
+GoF(model.dlm2)
+```
+
+## Model Autorgressive
+
+### Pemodelan
+
+```{r}
+model.ardl = ardlDlm(x = train$Xt, y = train$Yt, p = 1 , q = 1)
+summary(model.ardl)
+AIC(model.ardl)
+BIC(model.ardl)
+```
+
+### Peramalan dan Akurasi
+
+```{r}
+fore.ardl <- forecast(model = model.ardl, x=test$Xt, h=5)
+mape.ardl <- MAPE(fore.ardl$forecasts, test$Yt)
+#akurasi data training
+GoF(model.ardl)
+```
+
+### *Lag* Optimum
+
+```{r}
+#penentuan lag optimum
+ardlBoundOrders(data = data.frame(data) , formula = Yt ~ Xt )
+```
+
+## Pemodelan DLM & ARDL dengan Library `dynlm`
+
+```{r}
+#sama dengan model dlm q=1
+cons_lm1 <- dynlm(Yt ~ Xt+L(Xt),data = train.ts)
+#sama dengan model ardl p=1 q=0
+cons_lm2 <- dynlm(Yt ~ Xt+L(Yt),data = train.ts)
+#sama dengan ardl p=1 q=1
+cons_lm3 <- dynlm(Yt ~ Xt+L(Xt)+L(Yt),data = train.ts)
+#sama dengan dlm p=2
+cons_lm4 <- dynlm(Yt ~ Xt+L(Xt)+L(Xt,2),data = train.ts)
+```
+
+### Ringkasan Model
+
+```{r}
+summary(cons_lm1)
+summary(cons_lm2)
+summary(cons_lm3)
+summary(cons_lm4)
+```
+
+### SSE
+
+```{r}
+deviance(cons_lm1)
+deviance(cons_lm2)
+deviance(cons_lm3)
+deviance(cons_lm4)
+```
+
+### Uji Diagnostik
+
+```{r}
+#uji model
+if(require("lmtest")) encomptest(cons_lm1, cons_lm2)
+```
+
+#### 
+
+```{r}
+
+```
