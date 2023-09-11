@@ -4,17 +4,17 @@ author:
 - Adelia Putri Pangestika
 - Muhammad Rizky Nurhambali
 output:
-  pdf_document: default
-  word_document: default
   html_document:
     theme: yeti
     toc: true
     toc_float: true
+  word_document: default
+  pdf_document: default
 ---
 
 ## *Packages*
 
-```{r}
+```{r, echo=FALSE}
 #PACKAGES
 #install.packages("dLagM") #install jika belum ada
 #install.packages("dynlm") #install jika belum ada
@@ -84,7 +84,7 @@ BIC(model.dlm)
 ### Peramalan dan Akurasi
 
 ```{r}
-fore.dlm <- forecast(model = model.dlm, x=test$Xt, h=5)
+fore.dlm <- forecast(model = model.dlm, x=train$Xt, h=5)
 mape.dlm <- MAPE(fore.dlm$forecasts, test$Yt)
 #akurasi data training
 GoF(model.dlm)
@@ -121,6 +121,15 @@ Peubah dependen dipengaruhi oleh peubah independen pada waktu sekarang, serta di
 
 ### Pemodelan
 
+Pemodelan Autoregressive dilakukan menggunakan fungsi `dLagM::ardlDlm()` . Fungsi tersebut akan menerapkan *autoregressive* berordo $(p,q)$ dengan satu prediktor. Fungsi umum dari `ardlDlm()` adalah sebagai berikut.
+
+```{r, eval=FALSE}
+ardlDlm(formula = NULL , data = NULL , x = NULL , y = NULL , p = 1 , q = 1 , 
+         remove = NULL )
+```
+
+Dengan $p$ adalah integer yang mewakili panjang *lag* yang terbatas dan $q$ adalah integer yang merepresentasikan ordo dari proses *autoregressive*.
+
 ```{r}
 model.ardl <- ardlDlm(x = train$Xt, y = train$Yt, p = 1 , q = 1)
 summary(model.ardl)
@@ -128,27 +137,54 @@ AIC(model.ardl)
 BIC(model.ardl)
 ```
 
-Hasil di atas menunjukkan bahwa selain peubah $$x_{t-1}$$, hasil uji t menunjukkan nilai-p pada peubah $$\ge0.05$$. Hal ini menunjukkan bahwa peubah $$x_{t-1}$$ berpengaruh signifikan terhadap $$y_t$$ , sementara $$x_t$$ dan $$y_{t-1}$$ berpengaruh signifikan terhadap $$y_t$$. Model keseluruhannya adalah sebagai berikut:
+Hasil di atas menunjukkan bahwa selain peubah $x_{t-1}$, hasil uji t menunjukkan nilai-p pada peubah $\ge0.05$ Hal ini menunjukkan bahwa peubah $x_{t-1}$ berpengaruh signifikan terhadap $y_t$, sementara $x_t$ dan $y_{t-1}$ berpengaruh signifikan terhadap $y_t$. Model keseluruhannya adalah sebagai berikut:
 
-$\hat{Y}=-8,3594+0,3563X_t+1,4557X_{t-1}+0,1408Y_{t-1}$
+$$
+\hat{Y}=-8,3594+0,3563X_t+1,4557X_{t-1}+0,1408Y_{t-1}
+$$
 
 ### Peramalan dan Akurasi
 
 ```{r}
 fore.ardl <- forecast(model = model.ardl, x=test$Xt, h=5)
+fore.ardl
+```
+
+Data di atas merupakan hasil peramalan untuk 5 periode ke depan menggunakan Model Autoregressive dengan $p=1$ dan $q=1$.
+
+```{r}
 mape.ardl <- MAPE(fore.ardl$forecasts, test$Yt)
+mape.ardl
 #akurasi data training
 GoF(model.ardl)
 ```
+
+Berdasarkan akurasi di atas, terlihat bahwa nilai MAPE keduanya tidak jauh berbeda. Artinya, model regresi dengan distribusi lag ini tidak `overfitted` atau `underfitted`
 
 ### *Lag* Optimum
 
 ```{r}
 #penentuan lag optimum
-ardlBoundOrders(data = data.frame(data) , formula = Yt ~ Xt )
+model.ardl.opt <- ardlBoundOrders(data = data.frame(data), ic = "AIC", 
+                                  formula = Yt ~ Xt )
+min_p=c()
+for(i in 1:6){
+  min_p[i]=min(model.ardl.opt$Stat.table[[i]])
+}
+q_opt=which(min_p==min(min_p, na.rm = TRUE))
+p_opt=which(model.ardl.opt$Stat.table[[q_opt]] == 
+              min(model.ardl.opt$Stat.table[[q_opt]], na.rm = TRUE))
+data.frame("q_optimum" = q_opt, "p_optimum" = p_opt, 
+           "AIC"=model.ardl.opt$min.Stat)
 ```
 
+Dari tabel di atas, dapat terlihat bahwa nilai AIC terendah didapat ketika $p=6$ dan $q=1$, yaitu sebesar `-20,56587`. Artinya, model autoregressive optimum didapat ketika $p=6$ dan $q=1$.
+
+Selanjutnya dapat dilakukan pemodelan dengan nilai $p$ dan $q$ optimum seperti inisialisasi di langkah sebelumnya.
+
 ## Pemodelan DLM & ARDL dengan Library `dynlm`
+
+Pemodelan regresi dengan peubah *lag* tidak hanya dapat dilakukan dengan fungsi pada *packages* `dLagM` , tetapi terdapat *packages* `dynlm` yang dapat digunakan. Fungsi
 
 ```{r}
 #sama dengan model dlm q=1
