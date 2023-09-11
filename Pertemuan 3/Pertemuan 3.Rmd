@@ -180,8 +180,107 @@ deviance(cons_lm4)
 if(require("lmtest")) encomptest(cons_lm1, cons_lm2)
 ```
 
-#### 
+#### Autokorelasi
 
 ```{r}
-
+#durbin watson
+dwtest(cons_lm1)
+dwtest(cons_lm2)
+dwtest(cons_lm3)
+dwtest(cons_lm4)
 ```
+
+#### Heterogenitas
+
+```{r}
+bptest(cons_lm1)
+bptest(cons_lm2)
+bptest(cons_lm3)
+bptest(cons_lm4)
+```
+
+#### Kenormalan
+
+```{r}
+shapiro.test(residuals(cons_lm1))
+shapiro.test(residuals(cons_lm2))
+shapiro.test(residuals(cons_lm3))
+shapiro.test(residuals(cons_lm4))
+```
+
+## Perbandingan Model
+
+```{r}
+akurasi <- matrix(c(mape.koyck, mape.dlm, mape.dlm2, mape.ardl))
+row.names(akurasi)<- c("Koyck","DLM 1","DLM 2","Autoregressive")
+colnames(akurasi) <- c("MAPE")
+akurasi
+```
+
+### Plot
+
+```{r}
+par(mfrow=c(1,1))
+plot(test$Xt, test$Yt, type="b", col="black", ylim=c(120,250))
+points(test$Xt, fore.koyck$forecasts,col="red")
+lines(test$Xt, fore.koyck$forecasts,col="red")
+points(test$Xt, fore.dlm$forecasts,col="blue")
+lines(test$Xt, fore.dlm$forecasts,col="blue")
+points(test$Xt, fore.dlm2$forecasts,col="orange")
+lines(test$Xt, fore.dlm2$forecasts,col="orange")
+points(test$Xt, fore.ardl$forecasts,col="green")
+lines(test$Xt, fore.ardl$forecasts,col="green")
+legend("topleft",c("aktual", "koyck","DLM 1","DLM 2", "autoregressive"), lty=1, col=c("black","red","blue","orange","green"), cex=0.8)
+```
+
+## Pengayaan (Regresi Berganda)
+
+### Data
+
+```{r}
+data(M1Germany)
+data1 = M1Germany[1:144,]
+```
+
+### DLM
+
+```{r}
+#Run the search over finite DLMs according to AIC values
+finiteDLMauto(formula = logprice ~ interest+logm1,
+              data = data.frame(data1), q.min = 1, q.max = 5,
+              model.type = "dlm", error.type = "AIC", trace = FALSE)
+```
+
+```{r}
+#model dlm berganda
+model.dlmberganda = dlm(formula = logprice ~ interest + logm1,
+                data = data.frame(data1) , q = 5)
+summary(model.dlmberganda)
+
+model.dlmberganda2 = dlm(formula = logprice ~ interest + logm1,
+                        data = data.frame(data1) , q = 1)
+summary(model.dlmberganda2)
+```
+
+### ARDL
+
+```{r}
+#Mencari orde lag optimum model ARDL
+ardlBoundOrders(data = data1 , formula = logprice ~ interest + logm1 )
+
+model.ardlDlmberganda = ardlDlm(formula = logprice ~ interest + logm1,
+                        data = data.frame(data1) , p = 4 , q = 4)
+summary(model.ardlDlmberganda)
+```
+
+```{r}
+#model p interest 0 p logm1 4 
+rem.p = list(interest = c(1,2,3,4))
+remove = list(p = rem.p)
+model.ardlDlmberganda2 = ardlDlm(formula = logprice ~ interest + logm1,
+                        data = data.frame(data1) , p = 4 , q = 4 ,
+                        remove = remove)
+summary(model.ardlDlmberganda2)
+```
+
+Proses selanjutnya sama dengan pemodelan menggunakan peubah tunggal.
