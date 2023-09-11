@@ -113,12 +113,8 @@ $$
 Berikut merupakan hasil peramalan $y$ untuk 5 periode kedepan
 
 ```{r}
-<<<<<<< HEAD
-fore.dlm <- forecast(model = model.dlm, x=train$Xt, h=5)
-=======
 fore.dlm <- forecast(model = model.dlm, x=test$Xt, h=5)
 fore.dlm
->>>>>>> e36148baac5e7fab585adaf0cf1b102791ec4f4d
 mape.dlm <- MAPE(fore.dlm$forecasts, test$Yt)
 #akurasi data training
 GoF(model.dlm)
@@ -161,7 +157,7 @@ GoF(model.dlm2)
 
 Model tersebut merupakan model yang sangat baik dengan nilai MAPE yang kurang dari 10%.
 
-## Model Autorgressive
+## Model Autoregressive
 
 Peubah dependen dipengaruhi oleh peubah independen pada waktu sekarang, serta dipengaruhi juga oleh peubah dependen itu sendiri pada satu waktu yang lalu maka model tersebut disebut *autoregressive* (Gujarati 2004).
 
@@ -230,7 +226,15 @@ Selanjutnya dapat dilakukan pemodelan dengan nilai $p$ dan $q$ optimum seperti i
 
 ## Pemodelan DLM & ARDL dengan Library `dynlm`
 
-Pemodelan regresi dengan peubah *lag* tidak hanya dapat dilakukan dengan fungsi pada *packages* `dLagM` , tetapi terdapat *packages* `dynlm` yang dapat digunakan. Fungsi
+Pemodelan regresi dengan peubah *lag* tidak hanya dapat dilakukan dengan fungsi pada *packages* `dLagM` , tetapi terdapat *packages* `dynlm` yang dapat digunakan. Fungsi `dynlm` secara umum adalah sebagai berikut.
+
+```{r, eval=FALSE}
+dynlm(formula, data, subset, weights, na.action, method = "qr",
+  model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE,
+  contrasts = NULL, offset, start = NULL, end = NULL, ...)
+```
+
+Untuk menentukan `formula` model yang akan digunakan, tersedia fungsi tambahan yang memungkinkan spesifikasi dinamika (melalui `d()` dan `L()`) atau pola linier/siklus dengan mudah (melalui `trend()`, `season()`, dan `harmon()`). Semua fungsi formula baru mengharuskan argumennya berupa objek deret waktu (yaitu, `"ts"` atau `"zoo"`).
 
 ```{r}
 #sama dengan model dlm q=1
