@@ -65,6 +65,14 @@ dengan $$V_t=u_t-\lambda u_{t-1}$$
 
 ### Pemodelan
 
+Pemodelan model Koyck dengan `R` dapat menggunakan `dLagM::koyckDlm()` . Fungsi umum dari `koyckDlm` adalah sebagai berikut.
+
+```{r, eval=FALSE, message = FALSE, warning=FALSE, error=FALSE}
+koyckDlm(x , y , intercept)
+```
+
+Fungsi `koyckDlm()` akan menerapkan model lag terdistribusi dengan transformasi Koyck satu prediktor. Nilai `x` dan `y` tidak perlu sebagai objek *time series* (`ts`). `intercept` dapat dibuat `TRUE` untuk memasukkan intersep ke dalam model.
+
 ```{r}
 #MODEL KOYCK
 model.koyck <- koyckDlm(x = train$Xt, y = train$Yt)
@@ -92,6 +100,14 @@ GoF(model.koyck)
 ```
 
 ## Regression with Distributed Lag
+
+Pemodelan model Regression with Distributed Lag dengan `R` dapat menggunakan `dLagM::dlm()` . Fungsi umum dari `dlm` adalah sebagai berikut.
+
+```{r, eval=FALSE, error=FALSE}
+dlm(formula , data , x , y , q , remove )
+```
+
+Fungsi `dlm()` akan menerapkan model lag terdistribusi dengan satu atau lebih prediktor. Nilai `x` dan `y` tidak perlu sebagai objek *time series* (`ts`). $q$ adalah integer yang mewakili panjang *lag* yang terbatas.
 
 ### Pemodelan (Lag=2)
 
@@ -309,6 +325,8 @@ colnames(akurasi) <- c("MAPE")
 akurasi
 ```
 
+Berdasarkan nilai MAPE, model paling optimum didapat pada Model Koyck karena memiliki nilai MAPE yang terkecil.
+
 ### Plot
 
 ```{r}
@@ -324,6 +342,7 @@ points(test$Xt, fore.ardl$forecasts,col="green")
 lines(test$Xt, fore.ardl$forecasts,col="green")
 legend("topleft",c("aktual", "koyck","DLM 1","DLM 2", "autoregressive"), lty=1, col=c("black","red","blue","orange","green"), cex=0.8)
 ```
+
 Berdasarkan plot tersebut, terlihat bahwa plot yang paling mendekati data aktualnya adalah Model koyck, sehingga dapat disimpulkan model terbaik dalam hal ini adalah model regresi koyck
 
 ## Pengayaan (Regresi Berganda)
