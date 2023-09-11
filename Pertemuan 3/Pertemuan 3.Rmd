@@ -117,14 +117,20 @@ GoF(model.dlm2)
 
 ## Model Autorgressive
 
+Peubah dependen dipengaruhi oleh peubah independen pada waktu sekarang, serta dipengaruhi juga oleh peubah dependen itu sendiri pada satu waktu yang lalu maka model tersebut disebut *autoregressive* (Gujarati 2004).
+
 ### Pemodelan
 
 ```{r}
-model.ardl = ardlDlm(x = train$Xt, y = train$Yt, p = 1 , q = 1)
+model.ardl <- ardlDlm(x = train$Xt, y = train$Yt, p = 1 , q = 1)
 summary(model.ardl)
 AIC(model.ardl)
 BIC(model.ardl)
 ```
+
+Hasil di atas menunjukkan bahwa selain peubah $$x_{t-1}$$, hasil uji t menunjukkan nilai-p pada peubah $$\ge0.05$$. Hal ini menunjukkan bahwa peubah $$x_{t-1}$$ berpengaruh signifikan terhadap $$y_t$$ , sementara $$x_t$$ dan $$y_{t-1}$$ berpengaruh signifikan terhadap $$y_t$$. Model keseluruhannya adalah sebagai berikut:
+
+$\hat{Y}=-8,3594+0,3563X_t+1,4557X_{t-1}+0,1408Y_{t-1}$
 
 ### Peramalan dan Akurasi
 
