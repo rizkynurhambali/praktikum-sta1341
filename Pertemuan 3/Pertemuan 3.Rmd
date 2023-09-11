@@ -324,6 +324,7 @@ points(test$Xt, fore.ardl$forecasts,col="green")
 lines(test$Xt, fore.ardl$forecasts,col="green")
 legend("topleft",c("aktual", "koyck","DLM 1","DLM 2", "autoregressive"), lty=1, col=c("black","red","blue","orange","green"), cex=0.8)
 ```
+Berdasarkan plot tersebut, terlihat bahwa plot yang paling mendekati data aktualnya adalah Model koyck, sehingga dapat disimpulkan model terbaik dalam hal ini adalah model regresi koyck
 
 ## Pengayaan (Regresi Berganda)
 
@@ -358,7 +359,8 @@ summary(model.dlmberganda2)
 
 ```{r}
 #Mencari orde lag optimum model ARDL
-ardlBoundOrders(data = data1 , formula = logprice ~ interest + logm1 )
+ardlBoundOrders(data = data1 , formula = logprice ~ interest + logm1,
+                ic="AIC")
 
 model.ardlDlmberganda = ardlDlm(formula = logprice ~ interest + logm1,
                         data = data.frame(data1) , p = 4 , q = 4)
