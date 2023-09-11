@@ -51,6 +51,18 @@ data.ts<-ts(data)
 
 ## Model Koyck
 
+Model koyck didasarkan pada asumsi bahwa semakin jauh jarak lag peubah independen dari periode sekarang maka semakin kecil pengaruh peubah lag terhadap peubah dependen.
+
+Koyck mengusulkan suatu metode untuk menduga model dinamis distributed lag dengan mengasumsikan bahwa semua koefisien $\beta$ mempunyai tanda sama.
+
+Model kyock merupakan jenis paling umum dari model infinite distributed lag dan juga dikenal sebagai geometric lag
+
+$$
+y_t=a(1-\lambda)+\beta_0X_t+\beta_1Z_t+\lambda Y_{t-1}+V_t
+$$
+
+dengan $$V_t=u_t-\lambda u_{t-1}$$
+
 ### Pemodelan
 
 ```{r}
@@ -61,10 +73,19 @@ AIC(model.koyck)
 BIC(model.koyck)
 ```
 
+Dari hasil tersebut, didapat bahwa peubah $x_t$ dan $y_{t-1}$ memiliki nilai $P-Value<0.05$. Hal ini menunjukkan bahwa peubah $x_t$ dan $y_{t-1}$ berpengaruh signifikan terhadap $y$. Adapun model keseluruhannya adalah sebagai berikut
+
+$$
+\hat{Y_t}=-3.7335+1.1510X_t+0.4214Y_{t-1}
+$$
+
 ### Peramalan dan Akurasi
+
+Berikut adalah hasil peramalan y untuk 5 periode kedepan menggunakan model koyck
 
 ```{r}
 fore.koyck <- forecast(model = model.koyck, x=test$Xt, h=5)
+fore.koyck
 mape.koyck <- MAPE(fore.koyck$forecasts, test$Yt)
 #akurasi data training
 GoF(model.koyck)
@@ -72,7 +93,7 @@ GoF(model.koyck)
 
 ## Regression with Distributed Lag
 
-### Pemodelan
+### Pemodelan (Lag=2)
 
 ```{r}
 model.dlm <- dlm(x = train$Xt,y = train$Yt , q = 2)
@@ -81,10 +102,19 @@ AIC(model.dlm)
 BIC(model.dlm)
 ```
 
+Dari hasil diatas, didapat bahwa $P-value$ dari intercept dan $x_{t-1}<0.05$. Hal ini menunjukkan bahwa intercept dan $x_{t-1}$ berpengaruh signifikan terhadap $y$. Adapun model keseluruhan yang terbentuk adalah sebagai berikut
+
+$$
+\hat{Y_t}=-9.6779+0.3179X_t+1.5276X_{t-1}+0.2651X_{t-2}
+$$
+
 ### Peramalan dan Akurasi
+
+Berikut merupakan hasil peramalan $y$ untuk 5 periode kedepan
 
 ```{r}
 fore.dlm <- forecast(model = model.dlm, x=test$Xt, h=5)
+fore.dlm
 mape.dlm <- MAPE(fore.dlm$forecasts, test$Yt)
 #akurasi data training
 GoF(model.dlm)
@@ -95,17 +125,27 @@ GoF(model.dlm)
 ```{r}
 #penentuan lag optimum 
 finiteDLMauto(formula = Yt ~ Xt,
-              data = data.frame(train), q.min = 1, q.max = 4,
+              data = data.frame(train), q.min = 1, q.max = 6,
               model.type = "dlm", error.type = "AIC", trace = FALSE)
 ```
 
+Berdasarkan output tersebut, lag optimum didapatkan ketika lag=6. Selanjutnya dilakukan pemodelan untuk lag=6
+
 ```{r}
 #model dlm dengan lag optimum
-model.dlm2 <- dlm(x = train$Xt,y = train$Yt , q = 4)
+model.dlm2 <- dlm(x = train$Xt,y = train$Yt , q = 6)
 summary(model.dlm2)
 AIC(model.dlm2)
 BIC(model.dlm2)
 ```
+
+Dari hasil tersebut terdapat beberapa peubah yang berpengaruh signifikan terhadap taraf nyata 5% yaitu $x_t$ , $x_{t-2}$ , $x_{t-4}$ , $x_{t-6}$. Adapun keseluruhan model yang terbentuk adalah
+
+$$
+\hat{Y_t}=21.42223+1.68749X_t+...-3.47612X_{t-6}
+$$
+
+Adapun hasil peramalan 5 periode kedepan menggunakan model tersebut adalah sebagai berikut
 
 ```{r}
 #peramalan dan akurasi
@@ -114,6 +154,8 @@ mape.dlm2<- MAPE(fore.dlm2$forecasts, test$Yt)
 #akurasi data training
 GoF(model.dlm2)
 ```
+
+Model tersebut merupakan model yang sangat baik dengan nilai MAPE yang kurang dari 10%.
 
 ## Model Autorgressive
 
