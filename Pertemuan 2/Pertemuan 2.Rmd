@@ -4,12 +4,12 @@ author:
 - Adelia Putri Pangestika
 - Muhammad Rizky Nurhambali
 output:
-  pdf_document: default
-  word_document: default
   html_document:
     theme: yeti
     toc: true
     toc_float: true
+  word_document: default
+  pdf_document: default
 ---
 
 ## Pemanggilan *Packages*
