@@ -100,7 +100,7 @@ Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada
 
 ### Scatterplot Antar Lag
 
-#### Korelasi antara $Y_t$ dengan $Y_{t-1}$ 
+#### Korelasi antara $Y_t$ dengan $Y_{t-1}$
 
 ```{r}
 #Yt
@@ -119,13 +119,11 @@ plot(y=yt_ma,x=yt_1_ma)
 cor(yt_ma,yt_1_ma)
 ```
 
-#### Korelasi antara $Y_t$ dengan $Y_{t-2}$ 
+#### Korelasi antara $Y_t$ dengan $Y_{t-2}$
 
 ```{r}
 
 ```
-
-ADD: ACF, AR, dan MA
 
 ## Fungsi pembangkitan ARMA
 
