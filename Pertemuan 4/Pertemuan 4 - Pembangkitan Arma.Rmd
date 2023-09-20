@@ -38,7 +38,7 @@ Proses MA dapat dituliskan sebagai berikut:
 
 $$
 y_{t} = c + e_t + \theta_{1}e_{t-1} + \theta_{2}e_{t-2} + \dots + \theta_{q}e_{t-q} = c+{e_t+\sum_{i=1}^p \theta_ie_{t-i}}
-$$ Terlihat bahwa $\varepsilon_t$, atau *white noise*, berperan penting dalam pembangkitan proses MA.
+$$ Terlihat bahwa $e_t$, atau *white noise*, berperan penting dalam pembangkitan proses MA.
 
 ## Pembangkitan Proses MA(1)
 
@@ -98,7 +98,7 @@ Berdasarkan plot PACF tersebut, terlihat bahwa plot PACF cenderung *tails off* d
 ### Plot EACF
 
 ```{r}
-eacf(ma)
+TSA::eacf(ma)
 ```
 
 Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(0) dan ordo MA(1)
@@ -163,7 +163,7 @@ $$ y_{t} = c + e_t + \phi_{1}Y_{t-1} + \phi_{2}Y_{t-2} + \dots + \phi_{q}Y_{t-q}
 
 ## Pembangkitan Proses AR
 
-Akan dicoba membangkitkan proses AR paling sederhana, yaitu MA(1) dengan $\phi = 0.7$ sebanyak 200 observasi dan $c=0$. Karena diperlukan satu nilai awal untuk $e_{t-1}$, masukkan nilai pertama white noise sebagai nilai awal tersebut.
+Akan dicoba membangkitkan proses AR paling sederhana, yaitu AR(1) dengan $\phi = 0.7$ sebanyak 200 observasi dan $c=0$.
 
 ```{r}
 set.seed(1234)
@@ -217,7 +217,7 @@ Berdasarkan plot PACF tersebut, terlihat bahwa plot PACF *cuts off* pada lag per
 ### Plot EACF
 
 ```{r}
-eacf(ar)
+TSA::eacf(ar)
 ```
 
 Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(1) dan ordo MA(0)
@@ -277,10 +277,10 @@ Setelah mengetahui cara membangkitkan data berpola AR, MA, dan ARMA sederhana, b
 Pertama, lihat kembali bentuk umum data berpola ARMA.
 
 $$
-y_{t} = c + \sum_{i=1}^p \phi_{i}y_{t-i} + \sum_{j=1}^q \varepsilon_{t-j}+ \varepsilon_{t}
+y_{t} = c + \sum_{i=1}^p \phi_{i}y_{t-i} + \sum_{j=1}^q e_{t-j}+ e_{t}
 $$
 
-Komponen $c$ dan $\varepsilon_{t}$ cukup mudah untuk dibuat dan dicari. Bagaimana untuk komponen AR dan MA? Bayangkan ada koefisien dan data sebagai berikut:
+Komponen $c$ dan $e_{t}$ cukup mudah untuk dibuat dan dicari. Bagaimana untuk komponen AR dan MA? Bayangkan ada koefisien dan data sebagai berikut:
 
 $$
 \begin{aligned}
@@ -361,7 +361,7 @@ arma.sim <- function(n, macoef, arcoef){
 }
 ```
 
-Terlihat bahwa komponen $\sum_{i=1}^q y_{t-1}$ disimulasikan melalui `sum(arcoef * arma[arstart:arend])`. Jadi, koefisien dikalikan dengan data $y$ dari $t-q$ di mana q adalah jumlah koefisien AR, sampai data $t-1$. Lalu komponen $\sum_{j=1}^q \varepsilon_{t-j}$ disimulasikan melalui `sum(macoef * wn[mastart:maend])`. Koefisien dikalikan dengan *white noise* $e$ dari $t-p$, p jumlah koefisien MA, sampai $t-1$.
+Terlihat bahwa komponen $\sum_{i=1}^q y_{t-1}$ disimulasikan melalui `sum(arcoef * arma[arstart:arend])`. Jadi, koefisien dikalikan dengan data $y$ dari $t-q$ di mana q adalah jumlah koefisien AR, sampai data $t-1$. Lalu komponen $\sum_{j=1}^q e_{t-j}$ disimulasikan melalui `sum(macoef * wn[mastart:maend])`. Koefisien dikalikan dengan *white noise* $e$ dari $t-p$, p jumlah koefisien MA, sampai $t-1$.
 
 ```{r}
 # beberapa contoh pembangkitan melalui fungsi
@@ -419,7 +419,7 @@ Berdasarkan plot PACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi me
 ### Plot EACF
 
 ```{r}
-eacf(arma11)
+TSA::eacf(arma11)
 ```
 
 Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(1) dan ordo MA(1)
