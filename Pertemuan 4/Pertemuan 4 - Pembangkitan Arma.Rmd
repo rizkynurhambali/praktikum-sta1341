@@ -1,0 +1,176 @@
+---
+title: "AR-MA manual"
+output:
+  pdf_document: default
+  html_document: default
+date: "2023-09-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## White Noise
+
+Pembangkitan data berpola AR, MA, ARMA, dan banyak proses deret waktu lainnya diawali pembangkitan _white noise_. _White noise_ merupakan sederet nilai dari peubah bebas stokastik identik. Oleh karena itu, _white noise_ memiliki dua karakteristik penting:
+
+1. _White noise_ tidak memiliki autokorelasi (**karena saling bebas**)
+2. Nilai harapan dan ragam _white noise_ sama (**karena berasal dari peubah acak bebas stokastik identik**)
+
+_White noise_ dibangkitkan dari suatu peubah acak, umumnya peubah acak normal.
+
+```{r}
+wn <- rnorm(100)
+ts.plot(wn)
+```
+
+Dapat terlihat bahwa _white noise_ tidak memiliki autokorelasi dari ACF. Perhatikan bahwa lag ke-0 adalah korelasi observasi ke-t dengan dirinya sendiri. Nilai korelasi tersebut pasti 1. Sebagai alternatif, lag pertama di plot ACF dapat ditetapkan sebagai 1 (alih-alih 0) dengan menambahkan argumen `xlim(1, lag akhir)`. Plot tersebut dapat disandingkan bersamaan dengan membuat matriks $1 \times 2$ dengan `par(mfrow = c(1,2))`.
+
+
+```{r}
+par(mfrow = c(1, 2)) 
+acf(wn)
+acf(wn, xlim = c(1, 20))
+```
+
+## Proses MA
+
+Proses MA dapat dituliskan sebagai berikut:
+
+$$
+y_{t} = c + \varepsilon_t + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q} = c+{\varepsilon_t+\sum_{i=1}^p \theta_i\varepsilon_{t-i}}
+$$
+
+Terlihat bahwa $\varepsilon_t$, atau _white noise_, berperan penting dalam pembangkitan proses MA. Akan dicoba membangkitkan proses MA paling sederhana, yaitu MA(1) dengan $\theta = 0.5$ sebanyak 100 observasi dan $c=0$. Karena diperlukan satu nilai awal untuk $e_{t-1}$, masukkan nilai pertama white noise sebagai nilai awal tersebut.
+
+```{r}
+ma <- wn[1]
+```
+
+Nilai-nilai selanjutnya dapat dicari melalui *loop*. Bentuk loop dapat dilihat dari rumus MA(1) yang hendak dibangkitkan:
+
+$$
+y_t = e_t+0.5e_{t-1}
+$$
+
+```{r}
+for(i in 2:100){
+   ma[i] <- wn[i] + 0.5 * wn[i - 1] 
+}
+```
+
+ADD: ACF, AR, dan MA
+
+## Fugsi pembangkitan ARMA
+
+Setelah mengetahui cara membangkitkan data berpola AR, MA, dan ARMA sederhana, bagaimana cara melakukan pembangkitan data berpola tersebut yang lebih kompleks? Apakah dapat dibuat suatu fungsi yang fleksibel yang memungkinan pembangkitan dengan berapapun jumlah koefisien?
+
+Pertama, lihat kembali bentuk umum data berpola ARMA.
+
+$$
+y_{t} = c + \sum_{i=1}^p \phi_{i}y_{t-i} + \sum_{j=1}^q \varepsilon_{t-j}+ \varepsilon_{t}
+$$
+
+Komponen $c$ dan $\varepsilon_{t}$ cukup mudah untuk dibuat dan dicari. Bagaimana untuk komponen AR dan MA? Bayangkan ada koefisien dan data sebagai berikut:
+
+$$
+\begin{aligned}
+\begin{bmatrix}
+\phi_1 \  \phi_2 \ \phi_3
+\end{bmatrix}&=
+\begin{bmatrix}
+0.3 \ 0.5 \ 0.2
+\end{bmatrix}
+\\
+\begin{bmatrix}
+y_{t-1} \  y_{t-2} \ y_{t-3}
+\end{bmatrix}&=
+\begin{bmatrix}
+1 \ 2 \ 3
+\end{bmatrix}
+\end{aligned}
+$$
+
+Maka dari itu,
+
+$$
+\begin{aligned}
+\begin{bmatrix}
+\phi_1 \  \phi_2 \ \phi_3
+\end{bmatrix}
+\begin{bmatrix}
+y_{t-1} \\  y_{t-2} \\ y_{t-3}
+\end{bmatrix} &= \phi_1 \ y_{t-1}+\phi_2 \ y_{t-2}+\phi_3 \ y_{t-3}
+\\
+\begin{bmatrix}
+ 0.3 \ 0.5 \ 0.2
+\end{bmatrix}
+\begin{bmatrix}
+1 \\ 2 \\ 3
+\end{bmatrix} & = 0.3 \cdot1+0.5 \cdot 2+0.2 \cdot 3\\
+&=0.3+1+0.6 = 1.9
+\end{aligned}
+$$
+
+Jika koefisien dan _white noise_/nilai deret waktu sebelumnya dapat diekstrak dalam bentuk vektor, dapat dilakukan perkalian matriks untuk mencari nilai bagian AR dan MA:
+
+```{r}
+set.seed(30)
+coefs <- c(0.3, 0.5, 0.2)
+e <- c(1, 2, 3)
+
+coefs %*% e
+```
+
+Atau, dapat dilakukan perkalian _elementwise_ yang dijumlahkan:
+
+```{r}
+coefs * e
+sum(coefs * e)
+```
+
+Dari prinsip ini, dapat dibuat fungsi umum untuk membangkitkan data ARMA. Input dari fungsi adalah jumlah data yang hendak dibangkitkan, koefisien MA, dan koefisien AR.
+
+```{r}
+arma.sim <- function(n, macoef, arcoef){
+  manum <- length(macoef)
+  arnum <- length(arcoef)
+  stopifnot(manum < n & arnum < n)
+  
+  wn <- rnorm(n, sd = 0.5)
+  init <- max(manum, arnum)
+
+  arma <- wn[1:init]
+  for(i in {init+1}:n){
+   mastart <- i - manum
+   maend <- i-1
+   arstart <- i - arnum
+   arend <- i-1
+   arma[i] <- sum(arcoef * arma[arstart:arend]) + sum(macoef * wn[mastart:maend])  + wn[i]
+   }
+  return(arma)
+}
+```
+
+Terlihat bahwa komponen $\sum_{i=1}^q y_{t-1}$ disimulasikan melalui `sum(arcoef * arma[arstart:arend])`. Jadi, koefisien dikalikan dengan data $y$ dari $t-q$ di mana q adalah jumlah koefisien AR, sampai data $t-1$. Lalu komponen $\sum_{j=1}^q \varepsilon_{t-j}$ disimulasikan melalui `sum(macoef * wn[mastart:maend])`. Koefisien dikalikan dengan _white noise_ $e$ dari $t-p$, p jumlah koefisien MA, sampai $t-1$.
+
+```{r}
+# beberapa contoh pembangkitan melalui fungsi
+
+ma3 <- arma.sim(1000, c(0.4, 0.6,0.4), 0)
+ar2 <- arma.sim(1000, 0, c(0.3, 0.6))
+
+par(mfrow = c(2, 2))
+acf(ma3)
+pacf(ma3)
+acf(ar2)
+pacf(ar2)
+```
+
+```{r}
+#contoh untuk ARMA
+arma22 <- arma.sim(2000, c(0.3, 0.4), c(0.3,0.4))
+
+arma22 |> arima(c(2,0,2))
+```
+
