@@ -383,6 +383,16 @@ arma22 <- arma.sim(2000, c(0.3, 0.4), c(0.3,0.4))
 arma22 |> arima(c(2,0,2))
 ```
 
+```{r}
+set.seed(1234)
+n = length(wn)
+phi1 = 0.7
+theta1 = 0.5
+
+y.arma=c(1:n)
+for (i in 3:n){y.arma[i] = phi1*y.arma[i-1] + theta1*wn[i-1]+wn[i]}
+```
+
 Pembangkitan ARMA(p,q) juga dapat dilakukan dengan fungsi `arima.sim` sebagai berikut.
 
 ```{r}
@@ -395,7 +405,10 @@ arma11
 ### Plot Time Series
 
 ```{r}
+par(mfrow = c(1, 2))
+ts.plot(y.arma)
 ts.plot(arma11)
+par(mfrow = c(1, 1))
 ```
 
 Berdasarkan plot time series tersebut, terlihat bahwa model ARMA(1,1) cenderung stasioner dalam rataan
@@ -403,7 +416,10 @@ Berdasarkan plot time series tersebut, terlihat bahwa model ARMA(1,1) cenderung 
 ### Plot ACF
 
 ```{r}
+par(mfrow = c(1, 2))
+acf(y.arma)
 acf(arma11)
+par(mfrow = c(1, 1))
 ```
 
 Berdasarkan plot ACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi memiliki plot ACF yang *tails off*, sesuai dengan teori yang ada
@@ -411,7 +427,10 @@ Berdasarkan plot ACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi mem
 ### Plot PACF
 
 ```{r}
+par(mfrow = c(1, 2))
+pacf(y.arma)
 pacf(arma11)
+par(mfrow = c(1, 1))
 ```
 
 Berdasarkan plot PACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi memiliki plot PACF yang *tails off*, sesuai dengan teori
@@ -419,6 +438,7 @@ Berdasarkan plot PACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi me
 ### Plot EACF
 
 ```{r}
+TSA::eacf(y.arma)
 TSA::eacf(arma11)
 ```
 
