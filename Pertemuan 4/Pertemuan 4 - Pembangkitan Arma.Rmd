@@ -394,10 +394,57 @@ arma11
 
 ### Plot Time Series
 
+```{r}
+ts.plot(arma11)
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa model ARMA(1,1) cenderung stasioner dalam rataan
+
 ### Plot ACF
+
+```{r}
+acf(arma11)
+```
+
+Berdasarkan plot ACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi memiliki plot ACF yang *tails off*, sesuai dengan teori yang ada
 
 ### Plot PACF
 
+```{r}
+pacf(arma11)
+```
+
+Berdasarkan plot PACF tersebut, terlihat bahwa model ARMA(1,1) hasil simulasi memiliki plot PACF yang *tails off*, sesuai dengan teori
+
 ### Plot EACF
 
+```{r}
+eacf(arma11)
+```
+
+Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(1) dan ordo MA(1)
+
 ### Scatterplot Antar Lag
+
+#### Korelasi antara $Y_t$ dengan $Y_{t-1}$
+
+```{r}
+#Yt
+yt_arma <- arma11[-1]
+yt_arma
+#Yt-1
+yt_1_arma <- arma11[-200]
+yt_1_arma
+```
+
+```{r}
+plot(y=yt_arma,x=yt_1_arma)
+```
+
+Berdasarkan scatterplot tersebut, terlihat bahwa terdapat hubungan positif antara $Y_t$ dengan $Y_{t-1}$. Hal ini sesuai dengan teori yang ada
+
+```{r}
+cor(yt_arma,yt_1_arma)
+```
+
+Korelasi antara $Y_t$ dengan $Y_{t-1}$ dari hasil simulasi mendekati perhitungan teoritis yaitu
