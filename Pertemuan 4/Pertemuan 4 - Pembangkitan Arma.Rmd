@@ -324,7 +324,7 @@ coefs * e
 sum(coefs * e)
 ```
 
-Dari prinsip ini, dapat dibuat fungsi umum untuk membangkitkan data ARMA. Input dari fungsi adalah jumlah data yang hendak dibangkitkan, koefisien MA, dan koefisien AR.
+Dari prinsip ini, dapat dibuat fungsi umum untuk membangkitkan data ARMA. Input dari fungsi adalah jumlah data yang hendak dibangkitkan, koefisien MA, dan koefisien AR
 
 ```{r}
 arma.sim <- function(n, macoef, arcoef){
