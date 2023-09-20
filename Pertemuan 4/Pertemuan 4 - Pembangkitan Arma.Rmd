@@ -447,4 +447,9 @@ Berdasarkan scatterplot tersebut, terlihat bahwa terdapat hubungan positif antar
 cor(yt_arma,yt_1_arma)
 ```
 
-Korelasi antara $Y_t$ dengan $Y_{t-1}$ dari hasil simulasi mendekati perhitungan teoritis yaitu
+Korelasi antara $Y_t$ dengan $Y_{t-1}$ dari hasil simulasi mendekati perhitungan teoritis. $$
+\rho_k = \frac{(1-\theta \phi)(\phi-\theta)}{1-2\theta\phi+\theta^2}\phi^{k-1} \:untuk \:k\ge1
+$$
+
+$$
+\rho_1 = \frac{(1-((-0.5)(0.7)))(0.7-(-0.5))}{1-2(-0.5)(0.7)+(-0.5)^2}0.7^{1-1}=0,8307692 $$
