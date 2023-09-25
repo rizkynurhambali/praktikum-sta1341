@@ -9,6 +9,7 @@ date: "2023-09-23"
 ```{r}
 library(ggplot2)
 library(tsibble)
+library(tseries)
 ```
 
 ## Stasioner dalam Rataan dan Ragam
@@ -16,9 +17,7 @@ library(tsibble)
 Pada dasarnya, pembangkitan data ARIMA akan menghasilkan data yang stasioner dalam rataan dan ragam karena akan mengikuti fungsi *default*-nya yang mengikuti pembangkitan bilangan acak normal dengan `mean=0` dan `ragam=1` .
 
 ```{r}
-stas <- arima.sim(n=100, list(order=c(1,0,1),ar= .2, ma=.2))
-mean(stas)
-sd(stas)
+stas <- arima.sim(n=100, list(order=c(1,0,1),ar= .2, ma=.2),mean=12)
 ```
 
 ### Plot *Time Series*
@@ -32,9 +31,46 @@ plot_stas
 
 ### Plot ACF
 
+```{r}
+acf(stas)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut cenderung *tails off* dan membentuk gelombang sinus.
+
 ### Uji ADF
 
+```{r}
+tseries::adf.test(stas)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.01 yang lebih kecil dari taraf nyata 5% sehingga tolak $H_0$ dan menandakan bahwa data stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF.
+
 ### Plot Box-Cox
+
+```{r}
+index <- seq(1:100)
+library(MASS)
+bc = boxcox(stas~index, lambda = seq(-6,2,by=0.01))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
+
+Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) sebesar -1,94 dan pada selang kepercayaan 95% nilai memiliki batas bawah -5,01 dan batas atas 1,02. Selang tersebut memuat nilai satu sehingga dapat dikatakan bahwa data bangkitan stasioner dalam ragam.
+
+### Partisi Data
+
+#### Bagian 1
+
+#### Bagian 2
+
+#### Bagian 3
 
 ## Tidak Stasioner dalam Rataan, Stasioner dalam Ragam
 
@@ -147,3 +183,53 @@ c(sd1, sd5) |> ts() |> as_tsibble() |>
 ```
 
 ## Tidak Stasioner dalam Rataan dan juga Ragam
+
+Hal ini dapat disimulasikan dengan membangkitkan data yang tidak stasioner dalam ragam lalu membentuk trend menggunakan data tersebut
+
+```{r}
+sd2 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 2)
+sd6 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 6)
+datagab <- c(sd2,sd6)
+dt_rg <- startSpot + cumsum(datagab) |> ts() 
+```
+
+### Plot Time Series
+
+```{r}
+dt_rg |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data tidak stasioner dalam rataan, ditandai dengan adanya trend pada data dan tidak stasioner dalam ragam, ditandai dengan adanya perbedaan lebar pita pada plot
+
+### Plot ACF
+
+```{r}
+acf(dt_rg)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*tails off slowly*)yang menandakan data tidak stasioner dalam rataan
+
+### Uji ADF
+
+```{r}
+adf.test(dt_rg)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.7264 yang lebih besar dari taraf nyata 5% dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
+
+### Plot Boxcox
+
+### Partisi Data
+
+#### Bagian 1
+
+#### Bagian 2
+
+#### Bagian 3
