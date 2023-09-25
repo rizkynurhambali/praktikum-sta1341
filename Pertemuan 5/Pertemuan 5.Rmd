@@ -413,6 +413,7 @@ bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
 `arima.sim` memiliki parameter sd yang dapat di-set beda.
 
 ```{r}
+set.seed(8990)
 sd1 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 1)
 sd5 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 5)
 dtgab <- c(sd1,sd5) |> ts()
@@ -431,21 +432,64 @@ Berdasarkan plot time series tersebut, terlihat bahwa data stasioner dalam rataa
 
 ### Plot ACF
 
+```{r}
+acf(dtgab)
+```
+
+Berdasarkan plot ACF, terlihat bahwa data stasioner, ditandai dengan plot ACF yang *cuts off* di lag pertama
+
 ### Uji ADF
+
+```{r}
+adf.test(dtgab)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.01 yang kurang dari taraf nyata 5% dan menandakan bahwa data stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
 
 ### Partisi Data
 
 #### Bagian 1
 
+```{r}
+dtgab1 <- dtgab[1:66] |> ts()
+mean(dtgab1)
+var(dtgab1)
+```
+
 #### Plot Time Series
 
+```{r}
+dtgab1 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data cenderung stasioner dalam rataan, ditandain dengan tidak adanya trend dan musiman pada data, serta stasioner dalam ragam, ditandai dengan lebar pita yang cenderung sama pada plot tersebut
+
 #### Plot ACF
+
+```{r}
+acf(dtgab1)
+```
+
+Berdasarkan plot ACF, terlihat bahwa data cenderung stasioner ditandai dengan
 
 #### Uji ADF
 
 #### Plot Boxcox
 
 #### Bagian 2
+
+```{r}
+dtgab2 <- dtgab[67:132] |> ts()
+mean(dtgab2)
+var(dtgab2)
+```
 
 #### Plot Time Series
 
@@ -456,6 +500,12 @@ Berdasarkan plot time series tersebut, terlihat bahwa data stasioner dalam rataa
 #### Plot Boxcox
 
 #### Bagian 3
+
+```{r}
+dtgab3 <- dtgab[133:200] |> ts()
+mean(dtgab3)
+var(dtgab3)
+```
 
 #### Plot Time Series
 
