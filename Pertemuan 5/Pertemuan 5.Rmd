@@ -1,0 +1,122 @@
+---
+title: "Data Tidak Stasioner"
+output:
+  html_document: default
+  pdf_document: default
+date: "2023-09-23"
+---
+
+```{r}
+library(ggplot2)
+library(tsibble)
+```
+
+## Tidak Stasioner dalam Rataan
+
+Bagaimana cara mensimulasikan data dengan tren tertentu?
+
+Kunci dari simulasi tersebut berada di $Y_{t}-Y_{t-1}$, atau *first difference*, atau selisih antara observasi di waktu ke $t$ dan observasi sebelumnya. Jika suatu deret waktu memiliki tren naik, misal, maka selisih tersebut akan positif. Sebaliknya, jika suatu deret memiliki tren turun, maka selisih akan negatif. Jika suatu deret stasioner, selisih akan memiliki rata-rata nol.
+
+Ini dapat diilustrasikan dengan fungsi `cumsum`. `cumsum` adalah jumlah kumulatif. Untuk mengerti logika dari pengunaan jumlah kumulatif, bayangkan ada deret waktu dengan nilai awal $c$:
+
+$$
+Y_1 = c
+$$
+
+Lalu definsikan $d_i$, di mana $i = 2, 3, \ldots$ sebagai selisih observasi ke-i dengan observasi sebelumnya:
+
+$$
+d_i = Y_i-Y_{i-1}
+$$
+
+Perhatikan bahwa:
+
+$$
+\begin{aligned}
+Y_3-Y_{1} & = d_3+d_2\\
+&= Y_3-Y_2+Y_2-Y_1
+\end{aligned}
+$$
+
+Cukup jelas bahwa sifat tersebut berarti:
+
+$$
+\begin{aligned}
+Y_t-Y_1 &= \sum_{i=2}^t d_i\\
+Y_t &= Y_1 + \sum_{i=2}^t d_i
+\end{aligned}
+$$
+
+Atau, amatan di waktu ke $t$ dapat ditemukan dari menambahkan amatan ke-1 dengan jumlah kumulatif perbedaan $d_i$ sampai di waktu ke-t. Kode di bawah membuat data dengan proses tersebut. Ada tiga skenario, yaitu:
+
+1.  Selisih antara observasi dan observasi sebelumnya nol
+
+2.  Selisih antara observasi dan observasi sebelumnya positif
+
+3.  Selisih antara observasi dan observasi sebelumnya negatif
+
+Dengan nilai awal 1 dan komponen $e_t$ menyebar normal.
+
+```{r}
+notrend <- 1 + cumsum(rep(0, 100)) + rnorm(100) |> ts()
+postrend <- 1 + cumsum(rep(0.2, 100)) + rnorm(100) |> ts() 
+negtrend <- 1 + cumsum(rep(-0.2, 100)) + rnorm(100) |> ts()
+```
+
+Hasil yang muncul dapat di-plot (note, untuk plotting ini digunakan `ggplot2`; `ts.plot()` dapat digunakan - ini tergantung preferensi saja):
+
+```{r}
+plot_notrend <- notrend |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai") + ggtitle("First Difference = 0")
+plot_postrend <- postrend |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai") + ggtitle("First Difference = 0.2")
+plot_negtrend <- negtrend |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai") + ggtitle("First Difference = -0.2")
+
+ggpubr::ggarrange(plot_notrend, plot_postrend, plot_negtrend, nrow = 3)
+```
+
+Dapat disimulasikan proses MA atau AR yang tidak stasioner dengan suatu tren dengan mensimulasikan beda terlebih dahulu (menggunakan `arima.sim`), ditambah suatu konstanta, lalu mencari jumlah kumulatif. Terdapat juga parameter `mean` di fungsi `arima.sim`, tetapi parameter ini adalah parameter untuk $E[e_t]$, bukan $E[Y_t-Y_{t-1}]$. Proses dari nilai harapan *white noise* tertentu menjadi nilai harapan $Y$ di suatu proses MA atau AR yang tak stasioner sangat tergantung pada model, yang diilustrasikan [di sini](https://stats.stackexchange.com/questions/294748/arima-sim-again-what-does-the-mean-parameter-do-in-an-ma1-sim/).
+
+```{r}
+startSpot <- 3
+dt <- {arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2)) + 1.5}  |> ts()
+yt <- startSpot + cumsum(dt) |> ts()
+
+dt_alt <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), mean = 1.5)  |> ts()
+yt_alt <- startSpot + cumsum(dt_alt) |> ts()
+
+plot_dt <- dt |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai") + ggtitle("Penambahan konstanta 1.5 di selisih")
+plot_yt <- yt |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+plot_dt_alt <- dt_alt |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai") + ggtitle("Mean 1.5 di parameter arima.sim")
+plot_yt_alt <- yt_alt |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+
+ggpubr::ggarrange(plot_dt, plot_yt, plot_dt_alt, plot_yt_alt)
+```
+
+Terlihat di contoh di atas bahwa menambahkan konstanta 1.5 pada hasil `arima.sim` beda dengan memasukkan parameter `mean = 1.5`.
+
+## Tak stasioner simpangan baku
+
+`arima.sim` memiliki parameter sd yang dapat di-set beda.
+
+```{r}
+sd1 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 1)
+sd5 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 5)
+
+c(sd1, sd5) |> ts() |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
