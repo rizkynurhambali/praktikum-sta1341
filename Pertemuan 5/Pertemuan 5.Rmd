@@ -110,19 +110,62 @@ ggpubr::ggarrange(plot_dt, plot_yt, plot_dt_alt, plot_yt_alt)
 
 Terlihat di contoh di atas bahwa menambahkan konstanta 1.5 pada hasil `arima.sim` beda dengan memasukkan parameter `mean = 1.5`.
 
-## Tak Stasioner dalam Ragam, Stasioner dalam Rataan
+## Tidak Stasioner dalam Ragam, Stasioner dalam Rataan
 
 `arima.sim` memiliki parameter sd yang dapat di-set beda.
 
 ```{r}
 sd1 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 1)
 sd5 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 5)
+dtgab <- c(sd1,sd5) |> ts()
+```
 
-c(sd1, sd5) |> ts() |> as_tsibble() |> 
+### Plot Time Series
+
+```{r}
+dtgab |> as_tsibble() |> 
   ggplot(aes(x = index, y = value)) +
   geom_line() + theme_bw() +
   xlab("Obs") + ylab("Nilai")
 ```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data stasioner dalam rataan, ditandai dengan tidak adanya trend ataupun musiman pada data, namun tidak stasioner dalam ragam, ditandai dengan adanya perbedaan lebar pita pada plot
+
+### Plot ACF
+
+### Uji ADF
+
+### Partisi Data
+
+#### Bagian 1
+
+#### Plot Time Series
+
+#### Plot ACF
+
+#### Uji ADF
+
+#### Plot Boxcox
+
+#### Bagian 2
+
+#### Plot Time Series
+
+#### Plot ACF
+
+#### Uji ADF
+
+#### Plot Boxcox
+
+#### Bagian 3
+
+#### Plot Time Series
+
+#### Plot ACF
+
+#### Uji ADF
+
+#### Plot Boxcox
 
 ## Tidak Stasioner dalam Rataan dan Ragam
 
@@ -172,6 +215,123 @@ Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.7264 yang lebih besar 
 
 #### Bagian 1
 
+```{r}
+dt_rg1 <- dt_rg[1:66] |> ts()
+mean(dt_rg1)
+var(dt_rg1)
+```
+
+#### Plot Time Series
+
+```{r}
+dt_rg1 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data tidak stasioner dalam rataan karena masih terdapat tren pada data, namun cenderung stasioner dalam ragam karena memiliki lebar pita yang cenderung sama
+
+#### Plot ACF
+
+```{r}
+acf(dt_rg1)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*tails off slowly*)yang menandakan data tidak stasioner dalam rataan
+
+#### Uji ADF
+
+```{r}
+adf.test(dt_rg1)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.5653 yang lebih besar dari taraf nyata 5% dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
+
+#### Plot Boxcox
+
 #### Bagian 2
 
+```{r}
+dt_rg2 <- dt_rg[67:132] |> ts()
+mean(dt_rg2)
+var(dt_rg2)
+```
+
+#### Plot Time Series
+
+```{r}
+dt_rg2 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data tidak stasioner dalam rataan karena masih terdapat tren pada data, dan tidak stasioner dalam ragam karena memiliki lebar pita yang cenderung tidak sama
+
+#### Plot ACF
+
+```{r}
+acf(dt_rg2)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*tails off slowly*)yang menandakan data tidak stasioner dalam rataan
+
+#### Uji ADF
+
+```{r}
+adf.test(dt_rg2)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.6579 yang lebih besar dari taraf nyata 5% dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
+
+#### Plot Boxcox
+
 #### Bagian 3
+
+```{r}
+dt_rg3 <- dt_rg[133:200] |> ts()
+mean(dt_rg3)
+var(dt_rg3)
+```
+
+#### Plot Time Series
+
+```{r}
+dt_rg3 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data tidak stasioner dalam rataan karena masih terdapat tren pada data, namun cenderung stasioner dalam ragam karena memiliki lebar pita yang cenderung sama
+
+#### Plot ACF
+
+```{r}
+acf(dt_rg3)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*tails off slowly*)yang menandakan data tidak stasioner dalam rataan
+
+#### Uji ADF
+
+```{r}
+adf.test(dt_rg3)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.9331 yang lebih besar dari taraf nyata 5% dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
+
+#### Plot Boxcox
