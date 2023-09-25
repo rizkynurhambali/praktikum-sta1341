@@ -13,7 +13,28 @@ library(tsibble)
 
 ## Stasioner dalam Rataan dan Ragam
 
+Pada dasarnya, pembangkitan data ARIMA akan menghasilkan data yang stasioner dalam rataan dan ragam karena akan mengikuti fungsi *default*-nya yang mengikuti pembangkitan bilangan acak normal dengan `mean=0` dan `ragam=1` .
 
+```{r}
+stas <- arima.sim(n=100, list(order=c(1,0,1),ar= .2, ma=.2))
+mean(stas)
+sd(stas)
+```
+
+### Plot *Time Series*
+
+```{r}
+plot_stas <- stas |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+plot_stas
+```
+
+### Plot ACF
+
+### Uji ADF
+
+### Plot Box-Cox
 
 ## Tidak Stasioner dalam Rataan, Stasioner dalam Ragam
 
@@ -126,4 +147,3 @@ c(sd1, sd5) |> ts() |> as_tsibble() |>
 ```
 
 ## Tidak Stasioner dalam Rataan dan juga Ragam
-
