@@ -11,7 +11,11 @@ library(ggplot2)
 library(tsibble)
 ```
 
-## Tidak Stasioner dalam Rataan
+## Stasioner dalam Rataan dan Ragam
+
+
+
+## Tidak Stasioner dalam Rataan, Stasioner dalam Ragam
 
 Bagaimana cara mensimulasikan data dengan tren tertentu?
 
@@ -107,7 +111,7 @@ ggpubr::ggarrange(plot_dt, plot_yt, plot_dt_alt, plot_yt_alt)
 
 Terlihat di contoh di atas bahwa menambahkan konstanta 1.5 pada hasil `arima.sim` beda dengan memasukkan parameter `mean = 1.5`.
 
-## Tak stasioner simpangan baku
+## Tak Stasioner dalam Ragam, Stasioner dalam Rataan
 
 `arima.sim` memiliki parameter sd yang dapat di-set beda.
 
@@ -120,3 +124,6 @@ c(sd1, sd5) |> ts() |> as_tsibble() |>
   geom_line() + theme_bw() +
   xlab("Obs") + ylab("Nilai")
 ```
+
+## Tidak Stasioner dalam Rataan dan Ragam
+
