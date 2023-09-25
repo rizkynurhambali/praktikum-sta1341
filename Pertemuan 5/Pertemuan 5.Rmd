@@ -685,7 +685,7 @@ Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara 
 #### Uji ADF
 
 ```{r}
-adf.test(dt_rg3)
+tseries::adf.test(dt_rg3)
 ```
 
 $H_0$ : Data tidak stasioner dalam rataan
