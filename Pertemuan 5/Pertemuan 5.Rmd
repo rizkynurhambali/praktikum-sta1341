@@ -10,6 +10,11 @@ date: "2023-09-23"
 library(ggplot2)
 library(tsibble)
 library(tseries)
+library(MASS)
+```
+
+```{r}
+set.seed(8990)
 ```
 
 ## Stasioner dalam Rataan dan Ragam
@@ -17,7 +22,7 @@ library(tseries)
 Pada dasarnya, pembangkitan data ARIMA akan menghasilkan data yang stasioner dalam rataan dan ragam karena akan mengikuti fungsi *default*-nya yang mengikuti pembangkitan bilangan acak normal dengan `mean=0` dan `ragam=1` .
 
 ```{r}
-stas <- arima.sim(n=100, list(order=c(1,0,1),ar= .2, ma=.2),mean=12)
+stas <- arima.sim(n=200, list(order=c(1,0,1),ar= .2, ma=.2),mean=12)
 ```
 
 ### Plot *Time Series*
@@ -27,7 +32,10 @@ plot_stas <- stas |> as_tsibble() |>
   ggplot(aes(x = index, y = value)) + geom_line() + theme_bw() +
   xlab("Obs") + ylab("Nilai")
 plot_stas
+mean(stas)
 ```
+
+Plot deret waktu di atas menunjukkan bahwa data stasioner dalam rataan, ditandai dengan data yang menyebar di sekitar nilai tengahnya (18) dan stasioner dalam ragam, ditandai dengan lebar pita yang cenderung sama.
 
 ### Plot ACF
 
@@ -52,9 +60,8 @@ Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.01 yang lebih kecil da
 ### Plot Box-Cox
 
 ```{r}
-index <- seq(1:100)
-library(MASS)
-bc = boxcox(stas~index, lambda = seq(-6,2,by=0.01))
+index <- seq(1:200)
+bc = boxcox(stas~index, lambda = seq(0,4,by=0.01))
 #Nilai Rounded Lambda
 lambda <- bc$x[which.max(bc$y)]
 lambda
@@ -62,15 +69,115 @@ lambda
 bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
 ```
 
-Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) sebesar -1,94 dan pada selang kepercayaan 95% nilai memiliki batas bawah -5,01 dan batas atas 1,02. Selang tersebut memuat nilai satu sehingga dapat dikatakan bahwa data bangkitan stasioner dalam ragam.
+Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) optimum sebesar **1,97** dan pada selang kepercayaan 95% nilai memiliki batas bawah **0,22** dan batas atas **3,73**. Selang tersebut memuat nilai satu sehingga dapat dikatakan bahwa data bangkitan stasioner dalam ragam.
 
 ### Partisi Data
 
 #### Bagian 1
 
+```{r}
+dt_stas1 <- stas[1:67] |> ts()
+mean(dt_stas1)
+var(dt_stas1)
+```
+
+#### Plot Time Series
+
+```{r}
+dt_stas1 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Plot deret waktu di atas menunjukkan bahwa data stasioner dalam rataan, ditandai dengan data yang menyebar di sekitar nilai tengahnya (18) dan stasioner dalam ragam, ditandai dengan lebar pita yang cenderung sama.
+
+#### Plot ACF
+
+```{r}
+acf(dt_stas1)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut cenderung *tails off* dan membentuk gelombang sinus.
+
+#### Uji ADF
+
+```{r}
+tseries::adf.test(dt_stas1)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.043 yang lebih kecil dari taraf nyata 5% sehingga tolak $H_0$ dan menandakan bahwa data stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF.
+
+#### Plot Boxcox
+
+```{r}
+index <- seq(1:67)
+bc = boxcox(dt_stas1~index, lambda = seq(-2,6,by=1))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
+
+Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) optimum sebesar **2,2** dan pada selang kepercayaan 95% nilai memiliki batas bawah **-1,03** dan batas atas **5,52**. Selang tersebut memuat nilai satu sehingga dapat dikatakan bahwa data bangkitan stasioner dalam ragam.
+
 #### Bagian 2
 
-#### Bagian 3
+```{r}
+dt_stas2 <- stas[1:134] |> ts()
+mean(dt_stas2)
+var(dt_stas2)
+```
+
+#### Plot Time Series
+
+```{r}
+dt_stas2 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Plot deret waktu di atas menunjukkan bahwa data stasioner dalam rataan, ditandai dengan data yang menyebar di sekitar nilai tengahnya (18) dan stasioner dalam ragam, ditandai dengan lebar pita yang cenderung sama.
+
+#### Plot ACF
+
+```{r}
+acf(dt_stas2)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut cenderung *tails off* dan membentuk gelombang sinus.
+
+#### Uji ADF
+
+```{r}
+adf.test(dt_stas2)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.01 yang lebih kecil dari taraf nyata 5% sehingga tolak $H_0$ dan menandakan bahwa data stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF.
+
+#### Plot Boxcox
+
+```{r}
+index <- seq(1:134)
+bc = boxcox(dt_stas2~index, lambda = seq(0,6,by=1))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
+
+Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) optimum sebesar **2,85** dan pada selang kepercayaan 95% nilai memiliki batas bawah **0,48** dan batas atas **5,27**. Selang tersebut memuat nilai satu sehingga dapat dikatakan bahwa data bangkitan stasioner dalam ragam.
 
 ## Tidak Stasioner dalam Rataan, Stasioner dalam Ragam
 
@@ -167,6 +274,139 @@ ggpubr::ggarrange(plot_dt, plot_yt, plot_dt_alt, plot_yt_alt)
 ```
 
 Terlihat di contoh di atas bahwa menambahkan konstanta 1.5 pada hasil `arima.sim` beda dengan memasukkan parameter `mean = 1.5`.
+
+### Data Bangkitan Baru
+
+```{r}
+set.seed(8990)
+dt_alt <- arima.sim(n=200, list(order=c(1,0,1),ar=c(.2), ma=.2), mean=0.2)  |> ts()
+postrend <- startSpot + cumsum(dt_alt) |> ts()
+```
+
+### Plot Time Series
+
+```{r}
+postrend |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+mean(postrend)
+var(postrend)
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data tidak stasioner dalam rataan, ditandai dengan adanya tren positif, tetapi stasioner dalam ragam, ditandai dengan adanya lebar pita pada plot yang cenderung sama.
+
+```{r}
+ts.plot(diff(postrend))
+```
+
+### Plot ACF
+
+```{r}
+acf(postrend)
+```
+
+### Uji ADF
+
+```{r}
+adf.test(postrend)
+```
+
+### Plot Box-Cox
+
+```{r}
+index <- seq(1:200)
+bc = boxcox(postrend~index, lambda = seq(0.8,1.1,by=0.001))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
+
+### Partisi Data
+
+#### Bagian 1
+
+```{r}
+postrend1 <- postrend[1:150] |> ts()
+mean(postrend1)
+var(postrend1)
+```
+
+#### Plot Time Series
+
+```{r}
+postrend1 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+#### Plot ACF
+
+```{r}
+acf(postrend1)
+```
+
+#### Uji ADF
+
+```{r}
+adf.test(postrend1)
+```
+
+#### Plot Boxcox
+
+```{r}
+index <- seq(1:150)
+bc = boxcox(postrend1~index, lambda = seq(0.8,1.4,by=0.001))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
+
+#### Bagian 2
+
+```{r}
+postrend2 <- postrend[51:200] |> ts()
+mean(postrend2)
+var(postrend2)
+```
+
+#### Plot Time Series
+
+```{r}
+postrend2 |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+#### Plot ACF
+
+```{r}
+acf(postrend2)
+```
+
+#### Uji ADF
+
+```{r}
+adf.test(postrend2)
+```
+
+#### Plot Boxcox
+
+```{r}
+index <- seq(1:150)
+bc = boxcox(postrend2~index, lambda = seq(-1,1.2,by=0.001))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
 
 ## Tidak Stasioner dalam Ragam, Stasioner dalam Rataan
 
