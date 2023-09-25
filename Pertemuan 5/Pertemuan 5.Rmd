@@ -9,11 +9,10 @@ date: "2023-09-23"
 ```{r}
 library(ggplot2)
 library(tsibble)
+library(tseries)
 ```
 
 ## Stasioner dalam Rataan dan Ragam
-
-
 
 ## Tidak Stasioner dalam Rataan, Stasioner dalam Ragam
 
@@ -125,5 +124,54 @@ c(sd1, sd5) |> ts() |> as_tsibble() |>
   xlab("Obs") + ylab("Nilai")
 ```
 
-## Tidak Stasioner dalam Rataan dan juga Ragam
+## Tidak Stasioner dalam Rataan dan Ragam
 
+Hal ini dapat disimulasikan dengan membangkitkan data yang tidak stasioner dalam ragam lalu membentuk trend menggunakan data tersebut
+
+```{r}
+sd2 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 2)
+sd6 <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd = 6)
+datagab <- c(sd2,sd6)
+dt_rg <- startSpot + cumsum(datagab) |> ts() 
+```
+
+### Plot Time Series
+
+```{r}
+dt_rg |> as_tsibble() |> 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() + theme_bw() +
+  xlab("Obs") + ylab("Nilai")
+```
+
+Berdasarkan plot time series tersebut, terlihat bahwa data tidak stasioner dalam rataan, ditandai dengan adanya trend pada data dan tidak stasioner dalam ragam, ditandai dengan adanya perbedaan lebar pita pada plot
+
+### Plot ACF
+
+```{r}
+acf(dt_rg)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*tails off slowly*)yang menandakan data tidak stasioner dalam rataan
+
+### Uji ADF
+
+```{r}
+adf.test(dt_rg)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.7264 yang lebih besar dari taraf nyata 5% dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
+
+### Plot Boxcox
+
+### Partisi Data
+
+#### Bagian 1
+
+#### Bagian 2
+
+#### Bagian 3
