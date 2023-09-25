@@ -125,5 +125,5 @@ c(sd1, sd5) |> ts() |> as_tsibble() |>
   xlab("Obs") + ylab("Nilai")
 ```
 
-## Tidak Stasioner dalam Rataan dan Ragam
+## Tidak Stasioner dalam Rataan dan juga Ragam
 
