@@ -251,10 +251,10 @@ Dapat disimulasikan proses MA atau AR yang tidak stasioner dengan suatu tren den
 
 ```{r}
 startSpot <- 3
-dt <- {arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2)) + 1.5}  |> ts()
+dt <- {arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), sd=2) + 1.5}  |> ts()
 yt <- startSpot + cumsum(dt) |> ts()
 
-dt_alt <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), mean = 1.5)  |> ts()
+dt_alt <- arima.sim(n=100, list(order=c(1,0,1),ar=c(.2), ma=.2), mean = 1.5, sd=2)  |> ts()
 yt_alt <- startSpot + cumsum(dt_alt) |> ts()
 
 plot_dt <- dt |> as_tsibble() |> 
@@ -339,7 +339,7 @@ var(postrend1)
 ```{r}
 postrend1 |> as_tsibble() |> 
   ggplot(aes(x = index, y = value)) +
-  geom_line() + theme_bw() +
+  geom_line()+theme_bw() +
   xlab("Obs") + ylab("Nilai")
 ```
 
@@ -685,11 +685,11 @@ Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara 
 #### Uji ADF
 
 ```{r}
-adf.test(dt_rg3)
+tseries::adf.test(dt_rg3, k=10)
 ```
 
 $H_0$ : Data tidak stasioner dalam rataan
 
 $H_1$ : Data stasioner dalam rataan
 
-Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.03944 yang kurang dari taraf nyata 5% dan menandakan bahwa data stasioner dalam rataan. Hal ini tidak sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.323 yang lebih besar dari taraf nyata 5% dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini tidak sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF
