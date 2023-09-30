@@ -1,0 +1,25 @@
+---
+title: "Pendugaan Parameter, Diagnostik Model, dan Peramalan"
+output:
+  html_document: default
+  pdf_document: default
+date: "2023-09-30"
+---
+
+## Packages
+
+```{r}
+library(ggplot2)
+library(tsibble)
+library(tseries)
+library(MASS)
+library(forecast)
+library(TSA)
+library(TTR)
+library(aTSA)
+library(graphics)
+```
+
+## Data Bangkitan
+
+## Data Asli
