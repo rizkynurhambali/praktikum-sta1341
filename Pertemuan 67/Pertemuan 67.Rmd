@@ -23,3 +23,156 @@ library(graphics)
 ## Data Bangkitan
 
 ## Data Asli
+
+Digunakan data kurs yang dalam hal ini hanya digunakan data 500 periode awal
+
+```{r}
+datakurs<-read.csv("C:/Users/acer/OneDrive - apps.ipb.ac.id/Documents/S2_Semester 3/MPDW/MPDW/Praktikum Pertemuan 8-2022/kurs.csv",header=T)
+datakurs <- datakurs[1:500,]
+datakurs.ts<-ts(datakurs)
+```
+
+### Eksplorasi Data
+
+#### Plot Data Penuh
+
+```{r}
+plot.ts(datakurs.ts, lty=1, xlab="waktu", ylab="Kurs", main="Plot Data Kurs")
+```
+
+Berdasarkan plot data deret waktu, terlihat bahwa data cenderung memiliki trend yang naik. Berdasarkan pola data, pembagian data latih dan data uji ditetapkan dengan proporsi 86%:14%.
+
+#### Plot Data Latih
+
+```{r}
+kurstrain<-datakurs[1:430]
+train.ts<-ts(kurstrain)
+plot.ts(train.ts, lty=1, xlab="waktu", ylab="Kurs", main="Plot Kurs Train")
+```
+
+Berdasarkan plot data deret waktu pada data latih, terlihat bahwa data cenderung memiliki trend yang naik dan cenderung tidak bergerak pada nilai tengah tertentu. Hal ini mengindikasikan bahwa data tidak stasioner dalam rataan.
+
+#### Plot Data Uji
+
+```{r}
+kurstest<-datakurs[430:500]
+test.ts<-ts(kurstest)
+plot.ts(test.ts, lty=1, xlab="waktu", ylab="Kurs", main="Plot Kurs Test")
+```
+
+### Uji Stasioneritas Data
+
+#### Plot ACF
+
+```{r}
+acf(train.ts)
+```
+
+Berdasarkan plot ACF, terlihat bahwa plot ACF data menurun secara perlahan (*tails of slowly*). Hal ini juga menjadi indikasi bahwa data tidak stasioner dalam rataan
+
+#### Uji ADF
+
+```{r}
+tseries::adf.test(train.ts)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.5553 yang lebih besar dari taraf nyata 5% sehingga tak tolak $H_0$ dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF, sehingga ketidakstasioneran model kedepannya harus ditangani
+
+#### Plot Box-Cox
+
+```{r}
+index <- seq(1:430)
+bc = boxcox(train.ts~index, lambda = seq(5,10,by=1))
+#Nilai Rounded Lambda
+lambda <- bc$x[which.max(bc$y)]
+lambda
+#SK
+bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
+```
+
+Plot Boxcox menunjukkan nilai *rounded value* ($\lambda$) optimum sebesar **6,64** dan pada selang kepercayaan 95% nilai memiliki batas bawah **0,48** dan batas atas **5,27**. Selang tersebut memuat nilai satu sehingga dapat dikatakan bahwa data bangkitan stasioner dalam ragam.
+
+### Penanganan Ketidakstasioneran Data
+
+```{r}
+train.diff<-diff(train.ts,differences = 1) 
+plot.ts(train.diff, lty=1, xlab="waktu", ylab="Data Difference 1 Kurs", main="Plot Difference Kurs")
+```
+
+Berdasarkan plot data deret waktu, terlihat bahwa data sudah stasioner dalam rataan ditandai dengan data bergerak pada nilai tengah tertentu (tidak terdapat trend ataupun musiman pada data)
+
+#### Plot ACF
+
+```{r}
+acf(train.diff)
+```
+
+Berdasarkan plot tersebut, terlihat bahwa plot ACF cuts off pada lag ke 1. Hal ini menandakan data sudah stasioner dalam rataan dan ketidakstasioneran data telah berhasil tertangani.
+
+#### Uji ADF
+
+```{r}
+tseries::adf.test(train.diff)
+```
+
+$H_0$ : Data tidak stasioner dalam rataan
+
+$H_1$ : Data stasioner dalam rataan
+
+Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.01 yang lebih kecil dari taraf nyata 5% sehingga tolak $H_0$ atau data stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF, sehingga dalam hal ini ketidakstasioneran data sudah berhasil ditangani dan dapat dilanjutkan ke pemodelan
+
+### Identifikasi Model
+
+#### Plot ACF
+
+```{r}
+acf(train.diff)
+```
+
+Berdasarkan plot tersebut, terlihat bahwa plot ACF cenderung *cuts off* pada lag ke 1, sehingga jika plot PACF dianggap *tails of*, maka model tentatifnya adalah ARIMA(0,1,1).
+
+#### Plot PACF
+
+```{r}
+pacf(train.diff)
+```
+
+Berdasarkan plot tersebut, terlihat bahwa plot PACF cenderung *cuts off* pada lag ke 1, sehingga jika plot ACF dianggap *tails of*, maka model tentatifnya adalah ARIMA(1,1,0).
+
+Jika baik plot ACF maupun plot PACF keduanya dianggap tails of, maka model yang terbentuk adalah ARIMA(1,1,1)
+
+#### Plot EACF
+
+```{r}
+eacf(train.diff)
+```
+
+Identifikasi model menggunakan plot EACF dilakukan dengan melihat ujung segitiga pada pola segitiga nol. Dalam hal ini model tentatif yang terbentuk adalah ARIMA(0,1,2), ARIMA(1,1,2), ARIMA(2,1,2), dan ARIMA(3,1,2).
+
+### Pendugaan Parameter Model Tentatif
+
+#### ARIMA(0,1,1)
+
+#### ARIMA(1,1,0)
+
+#### ARIMA(1,1,1)
+
+#### ARIMA(0,1,2)
+
+#### ARIMA(1,1,2)
+
+#### ARIMA(2,1,2)
+
+### Diagnostik Sisaan
+
+#### Kebebasan Sisaan
+
+#### Kehomogenan Ragam
+
+#### Kenormalan
+
+### Peramalan
