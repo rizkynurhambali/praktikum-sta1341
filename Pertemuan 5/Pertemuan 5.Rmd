@@ -329,7 +329,7 @@ bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
 #### Bagian 1
 
 ```{r}
-postrend1 <- postrend[1:150] |> ts()
+postrend1 <- postrend[1:100] |> ts()
 mean(postrend1)
 var(postrend1)
 ```
@@ -358,8 +358,8 @@ adf.test(postrend1)
 #### Plot Boxcox
 
 ```{r}
-index <- seq(1:150)
-bc = boxcox(postrend1~index, lambda = seq(0.8,1.4,by=0.001))
+index <- seq(1:100)
+bc = boxcox(postrend1~index, lambda = seq(0.5,1,by=0.001))
 #Nilai Rounded Lambda
 lambda <- bc$x[which.max(bc$y)]
 lambda
@@ -370,7 +370,7 @@ bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
 #### Bagian 2
 
 ```{r}
-postrend2 <- postrend[51:200] |> ts()
+postrend2 <- postrend[101:200] |> ts()
 mean(postrend2)
 var(postrend2)
 ```
@@ -399,7 +399,7 @@ adf.test(postrend2)
 #### Plot Boxcox
 
 ```{r}
-index <- seq(1:150)
+index <- seq(1:100)
 bc = boxcox(postrend2~index, lambda = seq(-1,1.2,by=0.001))
 #Nilai Rounded Lambda
 lambda <- bc$x[which.max(bc$y)]
