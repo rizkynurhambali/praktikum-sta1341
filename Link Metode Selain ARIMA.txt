@@ -1,0 +1,17 @@
+ARIMAX:
+https://rpubs.com/denannn/kel1par3datainflasi2
+https://rpubs.com/cdorante/ec2004_w6
+
+SARIMA:
+https://rpubs.com/Akbar_rizki/sarima
+https://rpubs.com/auliaann/905379
+
+ARCH/GARCH:
+https://rpubs.com/spiffy/archgarchsahamamazon
+#Catatan:
+#untuk mengambil hasil forecast menggunakan ugarchforecast, gunakan:
+hasil_forecast <- objek_hasil_forecast@forecast[["seriesFor"]]
+#Lanjutkan dengan melakukan differencing inv menggunakan syntax pertemuan sebelumnya
+
+LSTM:
+https://www.r-bloggers.com/2018/04/time-series-deep-learning-forecasting-sunspots-with-keras-stateful-lstm-in-r/
